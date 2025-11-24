@@ -1,0 +1,101 @@
+/* client/css/style.css */
+/* 1. Nạp Tailwind v4 (Chỉ 1 dòng này là đủ) */
+/* 2. Khai báo Font (Giữ nguyên như cũ) */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Prata&display=swap');
+@import 'tailwindcss';
+/* 3. Cấu hình Theme (Thay cho file config) */
+@theme {
+    /* Khai báo Màu */
+    --color-dozzie-blue: #219ebc;
+    --color-dozzie-navy: #18233b;
+
+    /* Khai báo Font (Map Google Font vào tên biến của Dozzie) */
+    /* Prata đóng vai Artusi (Tiêu đề) */
+    --font-artusi: 'Prata', serif;
+
+    /* Fraunces đóng vai Bogart (Nội dung) */
+    --font-bogart: 'Fraunces', serif;
+}
+
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+/* Tạo thanh cuộn đẹp hơn tí */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* --- HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ --- */
+body {
+    opacity: 0; /* Mặc định ẩn */
+    transition: opacity 0.5s ease-in-out; /* Thời gian chuyển đổi 0.5s */
+}
+
+/* Khi có class này thì hiện rõ */
+body.loaded {
+    opacity: 1;
+}
+
+/* --- HÌNH DÁNG KÉN CHỮ L (Clip-path) --- */
+
+/* Phòng A (Kén dưới/trái): Hình chữ L xuôi */
+.pod-shape-a {
+    clip-path: polygon(
+        0% 0%,      /* Góc Trái-Trên */
+        70% 0%,     /* Kéo sang phải 70% */
+        70% 50%,    /* Thụt xuống giữa */
+        30% 50%,    /* Thụt vào trong (tạo eo) */
+        30% 100%,   /* Kéo xuống đáy */
+        0% 100%     /* Về góc Trái-Dưới */
+    );
+}
+
+/* Phòng B (L Ngược - Màu Xanh): Chiếm góc Phải-Dưới & Phải-Trên */
+/* Hình dáng: Đầu nhỏ ở trên, chân to ở dưới (Úp vào A) */
+.pod-shape-b {
+    clip-path: polygon(
+        70% 0%,     /* Bắt đầu từ chỗ A dừng */
+        100% 0%,    /* Góc Phải-Trên */
+        100% 100%,  /* Góc Phải-Dưới */
+        30% 100%,   /* Kéo sang trái 30% */
+        30% 50%,    /* Thụt lên giữa */
+        70% 50%     /* Thụt ra ngoài (khớp với eo của A) */
+    );
+}
+/* Hiệu ứng khi chọn */
+.selected-pod {
+    background-color: var(--color-dozzie-blue) !important;
+    color: white !important;
+    border-color: var(--color-dozzie-blue) !important;
+}
+
+/* Hiệu ứng đã đặt */
+.booked-pod {
+    background-color: #e5e7eb !important; /* Gray-200 */
+    color: #9ca3af !important; /* Gray-400 */
+    cursor: not-allowed !important;
+    pointer-events: none;
+}

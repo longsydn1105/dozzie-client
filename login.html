@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Đăng nhập / Đăng ký - Dozzie</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+       
+        <link rel="stylesheet" href="./src/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Prata&display=swap"
+            rel="stylesheet"
+        />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            artusi: ['Prata', 'serif'],
+                            bogart: ['Fraunces', 'serif'],
+                        },
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .auth-form {
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                opacity: 1;
+                transform: translateY(0);
+                position: relative;
+            }
+            .hidden-form {
+                opacity: 0;
+                transform: translateY(20px);
+                pointer-events: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: -1;
+            }
+        </style>
+    </head>
+    <body
+        class="font-bogart flex min-h-screen flex-col bg-white text-gray-700 antialiased"
+    >
+        <div id="app-navbar" class="sticky top-0 z-50 w-full"></div>
+
+        <main class="flex flex-grow items-center justify-center px-4 py-12">
+            <div
+                class="container mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2"
+            >
+                <div class="hidden space-y-8 lg:block" data-aos="fade-right">
+                    <div class="flex gap-4">
+                        <div class="h-12 w-12 flex-shrink-0 text-[#229ebd]">
+                            <svg
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3
+                                class="font-artusi mb-2 text-xl font-bold text-[#18233B]"
+                            >
+                                Seamless Process
+                            </h3>
+                            <p class="text-sm leading-relaxed text-gray-500">
+                                Từ xác minh danh tính, đặt phòng, thanh toán đến
+                                check-in. Tất cả tích hợp trong một cú chạm tay.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="h-12 w-12 flex-shrink-0 text-[#229ebd]">
+                            <svg
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                                ></path>
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M12 14a2 2 0 100-4 2 2 0 000 4z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3
+                                class="font-artusi mb-2 text-xl font-bold text-[#18233B]"
+                            >
+                                IoT Digital Room Control
+                            </h3>
+                            <p class="text-sm leading-relaxed text-gray-500">
+                                Cá nhân hóa căn phòng của bạn: chỉnh đèn, mở
+                                khóa QR, đổi màu không gian ngay trên điện
+                                thoại.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="h-12 w-12 flex-shrink-0 text-[#229ebd]">
+                            <svg
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3
+                                class="font-artusi mb-2 text-xl font-bold text-[#18233B]"
+                            >
+                                Safe & Clean Stay
+                            </h3>
+                            <p class="text-sm leading-relaxed text-gray-500">
+                                Vệ sinh tuyệt đối. Sự thoải mái và an toàn của
+                                bạn là ưu tiên số 1.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="relative flex min-h-[600px] flex-col justify-center rounded-[2rem] border border-gray-100 bg-white p-8 shadow-2xl shadow-gray-200 md:p-10"
+                    data-aos="fade-left"
+                >
+                    <div id="login-view" class="auth-form w-full">
+                        <div class="mb-8 flex items-center gap-4">
+                            <div
+                                class="flex h-16 w-16 items-center justify-center rounded-full bg-[#229ebd]/10 text-[#229ebd]"
+                            >
+                                <svg
+                                    class="h-10 w-10"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2
+                                    class="font-artusi text-2xl font-bold text-[#18233B]"
+                                >
+                                    Đăng nhập
+                                </h2>
+                                <p class="text-sm text-gray-500">
+                                    Chào mừng bạn quay lại với Dozzie!
+                                </p>
+                            </div>
+                        </div>
+
+                        <form id="login-form" class="space-y-5">
+                            <div>
+                                <label
+                                    class="mb-1 ml-1 block text-xs font-bold tracking-wider text-gray-500 uppercase"
+                                    >Email</label
+                                >
+                                <input
+                                    type="email"
+                                    id="login-email"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-gray-800 transition-all outline-none focus:ring-2 focus:ring-[#229ebd]"
+                                    placeholder="email@..."
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <div class="mb-1 flex justify-between">
+                                    <label
+                                        class="block text-xs font-bold tracking-wider text-gray-500 uppercase"
+                                        >Mật khẩu</label
+                                    >
+                                    <a
+                                        href="#"
+                                        class="text-xs font-bold text-[#229ebd] hover:underline"
+                                        >Quên mật khẩu?</a
+                                    >
+                                </div>
+                                <input
+                                    type="password"
+                                    id="login-password"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-gray-800 transition-all outline-none focus:ring-2 focus:ring-[#229ebd]"
+                                    placeholder="******"
+                                    required
+                                />
+                            </div>
+
+                            <div
+                                id="login-error-message"
+                                class="min-h-[20px] text-center text-sm font-bold text-red-500"
+                            ></div>
+
+                            <button
+                                type="submit"
+                                class="w-full rounded-xl bg-[#229ebd] py-3 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1a8bb0] hover:shadow-[#229ebd]/40"
+                            >
+                                Đăng nhập ngay
+                            </button>
+                        </form>
+
+                        <div class="mt-8 space-y-4 text-center">
+                            <div class="relative">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div
+                                        class="w-full border-t border-gray-200"
+                                    ></div>
+                                </div>
+                                <div
+                                    class="relative flex justify-center text-sm"
+                                >
+                                    <span class="bg-white px-2 text-gray-400"
+                                        >hoặc</span
+                                    >
+                                </div>
+                            </div>
+                            <button
+                                class="w-full rounded-xl border border-gray-200 py-3 font-bold text-gray-600 transition hover:bg-gray-50"
+                            >
+                                Google
+                            </button>
+                            <p class="text-sm text-gray-500">
+                                Chưa có tài khoản?
+                                <a
+                                    href="javascript:void(0)"
+                                    id="to-register-btn"
+                                    class="font-bold text-[#229ebd] hover:underline"
+                                    >Tạo tài khoản mới</a
+                                >
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        id="register-view"
+                        class="auth-form hidden-form w-full"
+                    >
+                        <div class="mb-8 flex items-center gap-4">
+                            <div
+                                class="flex h-16 w-16 items-center justify-center rounded-full bg-[#229ebd]/10 text-[#229ebd]"
+                            >
+                                <svg
+                                    class="h-10 w-10"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2
+                                    class="font-artusi text-2xl font-bold text-[#18233B]"
+                                >
+                                    Tạo tài khoản mới
+                                </h2>
+                                <p class="text-sm text-gray-500">
+                                    Nhận ngay voucher ưu đãi cho lần đầu!
+                                </p>
+                            </div>
+                        </div>
+
+                        <form id="register-form" class="space-y-5">
+                            <div>
+                                <label
+                                    class="mb-1 ml-1 block text-xs font-bold text-gray-500 uppercase"
+                                    >Tên hiển thị</label
+                                >
+                                <input
+                                    type="text"
+                                    id="reg-name"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-gray-800 transition-all outline-none focus:ring-2 focus:ring-[#229ebd]"
+                                    placeholder="Vd: Long Đại Ca"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="mb-1 ml-1 block text-xs font-bold text-gray-500 uppercase"
+                                    >Email</label
+                                >
+                                <input
+                                    type="email"
+                                    id="reg-email"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-gray-800 transition-all outline-none focus:ring-2 focus:ring-[#229ebd]"
+                                    placeholder="email@..."
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="mb-1 ml-1 block text-xs font-bold text-gray-500 uppercase"
+                                    >Mật khẩu</label
+                                >
+                                <input
+                                    type="password"
+                                    id="reg-password"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-gray-800 transition-all outline-none focus:ring-2 focus:ring-[#229ebd]"
+                                    placeholder="******"
+                                    required
+                                />
+                            </div>
+
+                            <div
+                                id="reg-error-message"
+                                class="min-h-[20px] text-center text-sm font-bold text-red-500"
+                            ></div>
+
+                            <button
+                                type="submit"
+                                class="w-full rounded-xl bg-[#229ebd] py-3 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#1a8bb0] hover:shadow-[#229ebd]/40"
+                            >
+                                Đăng Ký Ngay
+                            </button>
+                        </form>
+
+                        <div class="mt-8 space-y-4 text-center">
+                            <div class="relative">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div
+                                        class="w-full border-t border-gray-200"
+                                    ></div>
+                                </div>
+                                <div
+                                    class="relative flex justify-center text-sm"
+                                >
+                                    <span class="bg-white px-2 text-gray-400"
+                                        >hoặc</span
+                                    >
+                                </div>
+                            </div>
+                            <button
+                                class="w-full rounded-xl border border-gray-200 py-3 font-bold text-gray-600 transition hover:bg-gray-50"
+                            >
+                                Google
+                            </button>
+                            <p class="text-sm text-gray-500">
+                                Đã có tài khoản?
+                                <a
+                                    href="javascript:void(0)"
+                                    id="to-login-btn"
+                                    class="font-bold text-[#229ebd] hover:underline"
+                                    >Đăng nhập</a
+                                >
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="app-footer"></div>
+
+        <script src="/js/components.js"></script>
+        <script src="/js/main.js"></script>
+        <script src="/js/auth.js"></script>
+
+        <script>
+            window.addEventListener('pageshow', (event) => {
+                document.body.classList.add('loaded');
+            });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const loginView = document.getElementById('login-view');
+                const registerView = document.getElementById('register-view');
+                const toRegisterBtn =
+                    document.getElementById('to-register-btn');
+                const toLoginBtn = document.getElementById('to-login-btn');
+
+                // Chuyển sang Đăng ký
+                toRegisterBtn.addEventListener('click', () => {
+                    loginView.classList.add('hidden-form');
+                    setTimeout(() => {
+                        registerView.classList.remove('hidden-form');
+                    }, 50);
+                });
+
+                // Chuyển về Đăng nhập
+                toLoginBtn.addEventListener('click', () => {
+                    registerView.classList.add('hidden-form');
+                    setTimeout(() => {
+                        loginView.classList.remove('hidden-form');
+                    }, 50);
+                });
+
+                // Check URL Param
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('view') === 'register') {
+                    loginView.classList.add('hidden-form');
+                    registerView.style.transition = 'none';
+                    registerView.classList.remove('hidden-form');
+                    setTimeout(() => {
+                        registerView.style.transition = '';
+                    }, 100);
+                }
+            });
+        </script>
+    </body>
+</html>

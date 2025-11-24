@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Blog & Stories - Dozzie</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+        />
+        <link rel="stylesheet" href="./src/style.css" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Prata&display=swap"
+            rel="stylesheet"
+        />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            artusi: ['Prata', 'serif'],
+                            bogart: ['Fraunces', 'serif'],
+                        },
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            /* CSS cho hiệu ứng chữ hiện dần */
+            .swiper-slide-active .animate-text {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .animate-text {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: all 1s cubic-bezier(0.215, 0.61, 0.355, 1); /* Easing mượt */
+            }
+            /* Delay cho từng dòng */
+            .delay-100 {
+                transition-delay: 0.3s;
+            }
+            .delay-200 {
+                transition-delay: 0.5s;
+            }
+            .delay-300 {
+                transition-delay: 0.7s;
+            }
+        </style>
+    </head>
+    <body class="font-bogart bg-white text-gray-700 antialiased">
+        <div id="app-navbar" class="sticky top-0 z-50 w-full"></div>
+
+        <section class="relative h-[85vh] w-full overflow-hidden bg-[#18233B]">
+            <div class="swiper blogHeroSwiper h-full w-full">
+                <div
+                    class="parallax-bg absolute inset-0 bg-cover bg-center"
+                    style="
+                        background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop');
+                    "
+                    data-swiper-parallax="-23%"
+                ></div>
+                <div class="absolute inset-0 z-10 bg-black/40"></div>
+
+                <div class="swiper-wrapper z-20">
+                    <div
+                        class="swiper-slide flex items-center justify-center px-4"
+                    >
+                        <div
+                            class="relative container mx-auto max-w-5xl text-white"
+                        >
+                            <div
+                                class="animate-text mb-4 flex items-center gap-3 text-sm font-bold tracking-widest text-[#229ebd] uppercase delay-100"
+                            >
+                                <span>21 November 2025</span>
+                                <span class="h-px w-8 bg-white/50"></span>
+                                <span>Travel Tips</span>
+                            </div>
+                            <h1
+                                class="animate-text font-artusi mb-6 text-4xl leading-tight font-black delay-200 md:text-6xl lg:text-7xl"
+                            >
+                                11 Điểm đến Outbound <br />
+                                lý tưởng tại Đà Nẵng
+                            </h1>
+                            <p
+                                class="animate-text font-bogart mb-10 max-w-2xl text-lg leading-relaxed text-gray-200 delay-300 md:text-xl"
+                            >
+                                Khám phá những địa điểm dã ngoại tuyệt vời nhất,
+                                nơi không khí trong xanh và thiên nhiên hùng vĩ
+                                đang chờ đón bạn.
+                            </p>
+                            <div class="animate-text delay-300">
+                                <a
+                                    href="#"
+                                    class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 font-bold text-[#18233B] transition-all duration-300 hover:bg-[#229ebd] hover:text-white"
+                                >
+                                    Read More
+                                    <svg
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                        ></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 -z-10">
+                            <img
+                                src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop"
+                                class="h-full w-full object-cover"
+                                data-swiper-parallax="-50%"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        class="swiper-slide flex items-center justify-center px-4"
+                    >
+                        <div
+                            class="relative container mx-auto max-w-5xl text-white"
+                        >
+                            <div
+                                class="animate-text mb-4 flex items-center gap-3 text-sm font-bold tracking-widest text-[#229ebd] uppercase delay-100"
+                            >
+                                <span>15 November 2025</span>
+                                <span class="h-px w-8 bg-white/50"></span>
+                                <span>Lifestyle</span>
+                            </div>
+                            <h1
+                                class="animate-text font-artusi mb-6 text-4xl leading-tight font-black delay-200 md:text-6xl lg:text-7xl"
+                            >
+                                Nghệ thuật nghỉ trưa: <br />
+                                Ngủ ngắn, Tỉnh táo dài
+                            </h1>
+                            <p
+                                class="animate-text font-bogart mb-10 max-w-2xl text-lg leading-relaxed text-gray-200 delay-300 md:text-xl"
+                            >
+                                Tại sao một giấc ngủ 20 phút tại Dozzie có thể
+                                thay đổi hoàn toàn hiệu suất làm việc buổi chiều
+                                của bạn?
+                            </p>
+                            <div class="animate-text delay-300">
+                                <a
+                                    href="#"
+                                    class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 font-bold text-[#18233B] transition-all duration-300 hover:bg-[#229ebd] hover:text-white"
+                                >
+                                    Read More
+                                    <svg
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                        ></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 -z-10">
+                            <img
+                                src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop"
+                                class="h-full w-full object-cover"
+                                data-swiper-parallax="-50%"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        class="swiper-slide flex items-center justify-center px-4"
+                    >
+                        <div
+                            class="relative container mx-auto max-w-5xl text-white"
+                        >
+                            <div
+                                class="animate-text mb-4 flex items-center gap-3 text-sm font-bold tracking-widest text-[#229ebd] uppercase delay-100"
+                            >
+                                <span>10 November 2025</span>
+                                <span class="h-px w-8 bg-white/50"></span>
+                                <span>Cuisine</span>
+                            </div>
+                            <h1
+                                class="animate-text font-artusi mb-6 text-4xl leading-tight font-black delay-200 md:text-6xl lg:text-7xl"
+                            >
+                                Top 5 món ăn vặt <br />
+                                quanh khu vực Dozzie
+                            </h1>
+                            <p
+                                class="animate-text font-bogart mb-10 max-w-2xl text-lg leading-relaxed text-gray-200 delay-300 md:text-xl"
+                            >
+                                Lấp đầy chiếc bụng đói sau giấc ngủ ngon bằng
+                                những món ăn đường phố trứ danh chỉ cách vài
+                                bước chân.
+                            </p>
+                            <div class="animate-text delay-300">
+                                <a
+                                    href="#"
+                                    class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 font-bold text-[#18233B] transition-all duration-300 hover:bg-[#229ebd] hover:text-white"
+                                >
+                                    Read More
+                                    <svg
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                        ></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 -z-10">
+                            <img
+                                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop"
+                                class="h-full w-full object-cover"
+                                data-swiper-parallax="-50%"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        class="swiper-slide flex items-center justify-center px-4"
+                    >
+                        <div
+                            class="relative container mx-auto max-w-5xl text-white"
+                        >
+                            <div
+                                class="animate-text mb-4 flex items-center gap-3 text-sm font-bold tracking-widest text-[#229ebd] uppercase delay-100"
+                            >
+                                <span>01 November 2025</span>
+                                <span class="h-px w-8 bg-white/50"></span>
+                                <span>Community</span>
+                            </div>
+                            <h1
+                                class="animate-text font-artusi mb-6 text-4xl leading-tight font-black delay-200 md:text-6xl lg:text-7xl"
+                            >
+                                Dozzie Founder Club: <br />
+                                Đặc quyền người tiên phong
+                            </h1>
+                            <p
+                                class="animate-text font-bogart mb-10 max-w-2xl text-lg leading-relaxed text-gray-200 delay-300 md:text-xl"
+                            >
+                                Tham gia cộng đồng những người đầu tiên trải
+                                nghiệm mô hình Capsule Hotel công nghệ cao.
+                            </p>
+                            <div class="animate-text delay-300">
+                                <a
+                                    href="#"
+                                    class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 font-bold text-[#18233B] transition-all duration-300 hover:bg-[#229ebd] hover:text-white"
+                                >
+                                    Join Now
+                                    <svg
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                        ></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 -z-10">
+                            <img
+                                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"
+                                class="h-full w-full object-cover"
+                                data-swiper-parallax="-50%"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute right-12 bottom-12 z-30 flex gap-4">
+                    <div
+                        class="swiper-button-prev !static flex !h-14 !w-14 items-center justify-center !rounded-full !border !border-white/30 !bg-white/10 !text-white !backdrop-blur-md transition-all after:!content-none hover:!bg-white hover:!text-[#18233B]"
+                    >
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 19l-7-7 7-7"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div
+                        class="swiper-button-next !static flex !h-14 !w-14 items-center justify-center !rounded-full !border !border-white/30 !bg-white/10 !text-white !backdrop-blur-md transition-all after:!content-none hover:!bg-white hover:!text-[#18233B]"
+                    >
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                            ></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div
+                    class="swiper-pagination !bottom-12 !left-12 !w-auto !text-left"
+                ></div>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-4 py-20">
+            <div class="grid grid-cols-1 gap-10 md:grid-cols-3">
+                <div class="group cursor-pointer">
+                    <div class="mb-4 overflow-hidden rounded-2xl">
+                        <img
+                            src="https://images.unsplash.com/photo-1541123603104-512919d6a96c?q=80&w=2070&auto=format&fit=crop"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                    </div>
+                    <span
+                        class="text-xs font-bold tracking-widest text-[#229ebd] uppercase"
+                        >Travel Guide</span
+                    >
+                    <h3
+                        class="font-artusi mt-2 mb-2 text-2xl font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                    >
+                        Kinh nghiệm du lịch Đà Nẵng tự túc 3 ngày 2 đêm
+                    </h3>
+                    <p class="line-clamp-2 text-sm text-gray-500">
+                        Tổng hợp lịch trình ăn chơi, ngủ nghỉ tiết kiệm nhất cho
+                        dân phượt.
+                    </p>
+                </div>
+                <div class="group cursor-pointer">
+                    <div class="mb-4 overflow-hidden rounded-2xl">
+                        <img
+                            src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                    </div>
+                    <span
+                        class="text-xs font-bold tracking-widest text-[#229ebd] uppercase"
+                        >Wellness</span
+                    >
+                    <h3
+                        class="font-artusi mt-2 mb-2 text-2xl font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                    >
+                        Thiền trong Kén: Tại sao không?
+                    </h3>
+                    <p class="line-clamp-2 text-sm text-gray-500">
+                        Cách tận dụng không gian yên tĩnh của Dozzie để tìm lại
+                        sự cân bằng nội tâm.
+                    </p>
+                </div>
+                <div class="group cursor-pointer">
+                    <div class="mb-4 overflow-hidden rounded-2xl">
+                        <img
+                            src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=2070&auto=format&fit=crop"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                    </div>
+                    <span
+                        class="text-xs font-bold tracking-widest text-[#229ebd] uppercase"
+                        >News</span
+                    >
+                    <h3
+                        class="font-artusi mt-2 mb-2 text-2xl font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                    >
+                        Dozzie khai trương chi nhánh mới tại Quận 1
+                    </h3>
+                    <p class="line-clamp-2 text-sm text-gray-500">
+                        Chúng tôi chính thức có mặt tại trung tâm Sài Gòn với
+                        nhiều ưu đãi hấp dẫn.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container mx-auto border-b border-gray-100 px-4 py-16">
+            <div class="mb-12 text-center" data-aos="fade-up">
+                <h2
+                    class="font-artusi text-4xl font-black text-[#18233B] md:text-5xl"
+                >
+                    Latest Posts
+                </h2>
+            </div>
+
+            <div
+                class="relative px-4 md:px-12"
+                data-aos="fade-up"
+                data-aos-delay="100"
+            >
+                <div class="swiper latestSwiper !pb-10">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=2070&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]"
+                                        >Vietnamese Articles</span
+                                    >
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >22 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    10 Món ăn đường phố Đà Nẵng nhất định phải
+                                    thử
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]"
+                                        >Travel Tips</span
+                                    >
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >21 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    7 Địa điểm check-in "sống ảo" cực chất tại
+                                    Sơn Trà
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]"
+                                        >Fun Facts</span
+                                    >
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >20 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    12 Ngọn núi lửa hùng vĩ nhất thế giới (Có ở
+                                    VN không?)
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]">Wellness</span>
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >19 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    Lợi ích bất ngờ của giấc ngủ trưa 30 phút
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="swiper-button-prev latest-prev !left-0 flex !h-10 !w-10 items-center justify-center !text-[#18233B] after:!content-none hover:!text-[#229ebd]"
+                >
+                    <svg
+                        class="h-8 w-8"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"
+                        ></path>
+                    </svg>
+                </div>
+                <div
+                    class="swiper-button-next latest-next !right-0 flex !h-10 !w-10 items-center justify-center !text-[#18233B] after:!content-none hover:!text-[#229ebd]"
+                >
+                    <svg
+                        class="h-8 w-8"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                        ></path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-4 py-16">
+            <div class="mb-12 text-center" data-aos="fade-up">
+                <h2
+                    class="font-artusi text-4xl font-black text-[#18233B] md:text-5xl"
+                >
+                    Explore & Travel
+                </h2>
+            </div>
+
+            <div
+                class="relative px-4 md:px-12"
+                data-aos="fade-up"
+                data-aos-delay="100"
+            >
+                <div class="swiper exploreSwiper !pb-10">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]"
+                                        >Discovery</span
+                                    >
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >21 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    Khám phá vẻ đẹp hoang sơ của hồ nước xanh
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]"
+                                        >Fun Facts</span
+                                    >
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >21 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    Chinh phục đỉnh núi lửa: Trải nghiệm để đời
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1526666923127-b2970f64b422?q=80&w=2072&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]"
+                                        >Team Building</span
+                                    >
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >21 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    11 Gợi ý Outbound cho học sinh cực vui tại
+                                    Đà Lạt
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="group cursor-pointer">
+                                <div
+                                    class="mb-4 h-64 overflow-hidden rounded-2xl"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop"
+                                        class="h-full w-full transform object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div
+                                    class="mb-3 flex items-center gap-3 text-xs font-bold tracking-widest uppercase"
+                                >
+                                    <span class="text-[#229ebd]"
+                                        >Beach Life</span
+                                    >
+                                    <span class="text-gray-300">/</span>
+                                    <span class="text-gray-400"
+                                        >18 Nov 2025</span
+                                    >
+                                </div>
+                                <h3
+                                    class="font-artusi text-2xl leading-tight font-bold text-[#18233B] transition-colors group-hover:text-[#229ebd]"
+                                >
+                                    Top bãi biển đẹp nhất miền Trung bạn nên ghé
+                                    thăm
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="swiper-button-prev explore-prev !left-0 flex !h-10 !w-10 items-center justify-center !text-[#18233B] after:!content-none hover:!text-[#229ebd]"
+                >
+                    <svg
+                        class="h-8 w-8"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"
+                        ></path>
+                    </svg>
+                </div>
+                <div
+                    class="swiper-button-next explore-next !right-0 flex !h-10 !w-10 items-center justify-center !text-[#18233B] after:!content-none hover:!text-[#229ebd]"
+                >
+                    <svg
+                        class="h-8 w-8"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                        ></path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <div id="app-footer"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="/js/components.js"></script>
+        <script src="/js/main.js"></script>
+
+        <script>
+            window.addEventListener('pageshow', (event) => {
+                // pageshow giúp chạy lại cả khi user bấm nút Back của trình duyệt
+                document.body.classList.add('loaded');
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+                const links = document.querySelectorAll('a');
+
+                links.forEach((link) => {
+                    link.addEventListener('click', (e) => {
+                        const href = link.getAttribute('href');
+
+                        // Chỉ chặn các link nội bộ (chuyển trang thật)
+                        // Bỏ qua: link neo (#), link rỗng, link mở tab mới, link javascript
+                        if (
+                            href &&
+                            !href.startsWith('#') &&
+                            !href.startsWith('javascript') &&
+                            link.target !== '_blank' &&
+                            href !== window.location.href // Không reload nếu bấm vào chính trang đó
+                        ) {
+                            e.preventDefault(); // Dừng chuyển trang ngay lập tức
+
+                            // Làm mờ trang hiện tại
+                            document.body.classList.remove('loaded');
+
+                            // Đợi 500ms (bằng thời gian CSS transition) rồi mới chuyển thật
+                            setTimeout(() => {
+                                window.location.href = href;
+                            }, 500);
+                        }
+                    });
+                });
+                // 1. Slider Hero (Parallax)
+                const blogSwiper = new Swiper('.blogHeroSwiper', {
+                    speed: 1000,
+                    parallax: true,
+                    loop: true,
+                    autoplay: { delay: 5000, disableOnInteraction: false },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    pagination: { el: '.swiper-pagination', clickable: true },
+                });
+
+                // 2. Slider Latest Posts (Tự chạy 3s)
+                new Swiper('.latestSwiper', {
+                    loop: true,
+                    autoplay: { delay: 3000, disableOnInteraction: false }, // Tự chạy sau 3s
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    navigation: {
+                        nextEl: '.latest-next', // Class riêng
+                        prevEl: '.latest-prev', // Class riêng
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    },
+                });
+
+                // 3. Slider Explore & Travel (Tự chạy 3s)
+                new Swiper('.exploreSwiper', {
+                    loop: true,
+                    autoplay: { delay: 3200, disableOnInteraction: false }, // Chênh 0.2s cho đỡ đều chằn chặn
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    navigation: {
+                        nextEl: '.explore-next', // Class riêng
+                        prevEl: '.explore-prev', // Class riêng
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>

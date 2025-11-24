@@ -1,0 +1,1384 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Đặt Kén Ngay - Dozzie</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="./src/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Prata&display=swap"
+            rel="stylesheet"
+        />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            artusi: ['Prata', 'serif'],
+                            bogart: ['Fraunces', 'serif'],
+                        },
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            /* Tinh chỉnh thanh cuộn cho đẹp */
+            body::-webkit-scrollbar {
+                width: 8px;
+            }
+            body::-webkit-scrollbar-track {
+                background: #f8faff;
+            }
+            body::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 10px;
+            }
+            body::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8;
+            }
+
+            /* Select dropdown đẹp hơn */
+            select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+            }
+        </style>
+    </head>
+    <body
+        class="font-bogart bg-[#f0f4f8] text-gray-700 antialiased selection:bg-[#229ebd] selection:text-white"
+    >
+        <div id="app-navbar" class="sticky top-0 z-50 w-full"></div>
+
+        <main class="container mx-auto max-w-7xl px-4 py-12">
+            <section id="hotel-info" class="mb-12" data-aos="fade-up">
+                <div
+                    class="mb-6 flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-end"
+                >
+                    <div>
+                        <h1
+                            class="font-artusi mb-2 text-3xl font-black text-[#18233B] md:text-4xl"
+                        >
+                            Dozzie Capsule Hotel, Đà Nẵng
+                        </h1>
+                        <p
+                            class="font-bogart flex items-center gap-2 text-sm text-gray-500 md:text-base"
+                        >
+                            <svg
+                                class="h-4 w-4 text-[#229ebd]"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                ></path>
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                ></path>
+                            </svg>
+                            123 Đường Yên Bái, Quận Hải Châu, TP. Đà Nẵng
+                        </p>
+
+                        <div class="mt-4 flex items-center gap-4">
+                            <span
+                                class="rounded-full bg-[#229ebd] px-3 py-1 text-xs font-bold tracking-wider text-white uppercase"
+                                >Capsule Hotel</span
+                            >
+
+                            <div
+                                class="flex items-center gap-1 text-sm text-yellow-400"
+                            >
+                                <i class="fas fa-star"></i> ★★★★★
+                                <span class="ml-1 font-bold text-gray-400"
+                                    >(537 Đánh giá)</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        class="hidden items-center gap-2 font-bold text-[#229ebd] transition-all hover:underline lg:flex"
+                    >
+                        Xem bản đồ
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 7m0 13V7"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div
+                    class="grid h-[400px] grid-cols-1 gap-4 md:h-[500px] lg:grid-cols-4"
+                >
+                    <div
+                        class="group relative cursor-pointer overflow-hidden rounded-[2rem] lg:col-span-2 lg:row-span-2"
+                    >
+                        <img
+                            src="https://images.unsplash.com/photo-1599619351208-3e6c839d6828?q=80&w=2072&auto=format&fit=crop"
+                            class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="Main View"
+                        />
+                        <div
+                            class="absolute inset-0 bg-black/20 transition-colors group-hover:bg-transparent"
+                        ></div>
+                    </div>
+
+                    <div
+                        class="group relative hidden cursor-pointer overflow-hidden rounded-[2rem] lg:col-span-1 lg:block"
+                    >
+                        <img
+                            src="https://images.unsplash.com/photo-1556745753-b2904692b3cd?q=80&w=1973&auto=format&fit=crop"
+                            class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="Lobby"
+                        />
+                    </div>
+
+                    <div
+                        class="group relative hidden cursor-pointer overflow-hidden rounded-[2rem] lg:col-span-1 lg:block"
+                    >
+                        <img
+                            src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2070&auto=format&fit=crop"
+                            class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="Bathroom"
+                        />
+                    </div>
+
+                    <div
+                        class="group relative flex hidden cursor-pointer items-center justify-center overflow-hidden rounded-[2rem] bg-gray-100 lg:col-span-2 lg:flex"
+                    >
+                        <div class="flex items-center gap-8">
+                            <div
+                                class="w-48 rounded-2xl border-2 border-gray-800 bg-black p-4 shadow-2xl"
+                            >
+                                <div
+                                    class="mb-4 flex items-center justify-between"
+                                >
+                                    <span class="text-xs text-white">24°C</span>
+                                    <div
+                                        class="h-2 w-2 rounded-full bg-green-500"
+                                    ></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div
+                                        class="flex h-12 flex-col items-center justify-center rounded-lg bg-gray-800 text-xs text-gray-400"
+                                    >
+                                        💡 <span class="mt-1">Lights</span>
+                                    </div>
+                                    <div
+                                        class="flex h-12 flex-col items-center justify-center rounded-lg bg-gray-800 text-xs text-gray-400"
+                                    >
+                                        🔒 <span class="mt-1">Door</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-left">
+                                <h3
+                                    class="font-artusi text-xl font-bold text-[#18233B]"
+                                >
+                                    Smart Pod Control
+                                </h3>
+                                <p class="font-bogart text-sm text-gray-500">
+                                    Điều khiển mọi thứ <br />bằng một chạm.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex h-12 w-full items-center justify-center rounded-xl bg-gray-100 font-bold text-gray-600 lg:hidden"
+                    >
+                        + 15 Photos
+                    </div>
+                </div>
+            </section>
+            <div
+                class="sticky top-[88px] z-40 mx-4 mt-4 mb-5 rounded-2xl border border-gray-100 bg-white/90 py-4 shadow-md backdrop-blur-md transition-all"
+                id="in-page-nav"
+            >
+                <div
+                    class="container mx-auto flex items-center justify-between px-4"
+                >
+                    <div
+                        class="scrollbar-hide flex w-full flex-nowrap gap-8 overflow-x-auto md:w-auto md:gap-12"
+                    >
+                        <a
+                            href="#hotel-info"
+                            class="nav-link group relative flex-shrink-0 py-2 text-xs font-bold tracking-widest text-gray-400 uppercase transition-colors hover:text-[#229ebd] md:text-sm"
+                        >
+                            Tổng quan
+                            <span
+                                class="absolute bottom-0 left-0 h-0.5 w-0 bg-[#229ebd] opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"
+                            ></span>
+                        </a>
+
+                        <a
+                            href="#facilities"
+                            class="nav-link group relative flex-shrink-0 py-2 text-xs font-bold tracking-widest text-gray-400 uppercase transition-colors hover:text-[#229ebd] md:text-sm"
+                        >
+                            Tiện ích
+                            <span
+                                class="absolute bottom-0 left-0 h-0.5 w-0 bg-[#229ebd] opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"
+                            ></span>
+                        </a>
+
+                        <a
+                            href="#location"
+                            class="nav-link group relative flex-shrink-0 py-2 text-xs font-bold tracking-widest text-gray-400 uppercase transition-colors hover:text-[#229ebd] md:text-sm"
+                        >
+                            Vị trí
+                            <span
+                                class="absolute bottom-0 left-0 h-0.5 w-0 bg-[#229ebd] opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"
+                            ></span>
+                        </a>
+
+                        <a
+                            href="#policy"
+                            class="nav-link group relative flex-shrink-0 py-2 text-xs font-bold tracking-widest text-gray-400 uppercase transition-colors hover:text-[#229ebd] md:text-sm"
+                        >
+                            Chính sách
+                            <span
+                                class="absolute bottom-0 left-0 h-0.5 w-0 bg-[#229ebd] opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"
+                            ></span>
+                        </a>
+
+                        <a
+                            href="#reviews"
+                            class="nav-link group relative flex-shrink-0 py-2 text-xs font-bold tracking-widest text-gray-400 uppercase transition-colors hover:text-[#229ebd] md:text-sm"
+                        >
+                            Đánh giá
+                            <span
+                                class="absolute bottom-0 left-0 h-0.5 w-0 bg-[#229ebd] opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"
+                            ></span>
+                        </a>
+                    </div>
+
+                    <a
+                        href="#select-room"
+                        class="scroll-smooth-btn hidden items-center gap-2 text-sm font-black tracking-wider text-[#229ebd] uppercase transition-colors hover:text-[#1a8bb0] md:flex"
+                    >
+                        Chọn phòng ngay
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                            ></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <section
+                class="mb-12"
+                id="facilities"
+                data-aos="fade-up"
+                data-aos-delay="100"
+            >
+                <div class="mb-8 flex items-center gap-3">
+                    <div class="h-8 w-1.5 rounded-full bg-[#229ebd]"></div>
+                    <h2
+                        class="font-artusi text-2xl font-black text-[#18233B] md:text-3xl"
+                    >
+                        Tiện nghi & Dịch vụ
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-4">
+                    <div class="group flex items-center gap-3">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors group-hover:text-[#229ebd]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 7m0 13V7"
+                                ></path>
+                            </svg>
+                        </div>
+                        <span
+                            class="font-bogart text-sm text-gray-600 transition-colors group-hover:text-gray-800 md:text-base"
+                            >Bãi đậu xe (Có phí)</span
+                        >
+                    </div>
+
+                    <div class="group flex items-center gap-3">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors group-hover:text-[#229ebd]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                ></path>
+                            </svg>
+                        </div>
+                        <span
+                            class="font-bogart text-sm text-gray-600 transition-colors group-hover:text-gray-800 md:text-base"
+                            >Không gian chung</span
+                        >
+                    </div>
+
+                    <div class="group flex items-center gap-3">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors group-hover:text-[#229ebd]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <span
+                            class="font-bogart text-sm text-gray-600 transition-colors group-hover:text-gray-800 md:text-base"
+                            >Phòng tắm chung</span
+                        >
+                    </div>
+
+                    <div class="group flex items-center gap-3">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors group-hover:text-[#229ebd]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <span
+                            class="font-bogart text-sm text-gray-600 transition-colors group-hover:text-gray-800 md:text-base"
+                            >Nhà vệ sinh chung</span
+                        >
+                    </div>
+
+                    <div class="group flex items-center gap-3">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors group-hover:text-[#229ebd]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <span
+                            class="font-bogart text-sm text-gray-600 transition-colors group-hover:text-gray-800 md:text-base"
+                            >Máy sấy tóc</span
+                        >
+                    </div>
+
+                    <div class="group flex items-center gap-3">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors group-hover:text-[#229ebd]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <span
+                            class="font-bogart text-sm text-gray-600 transition-colors group-hover:text-gray-800 md:text-base"
+                            >Phòng cầu nguyện</span
+                        >
+                    </div>
+
+                    <div class="group flex items-center gap-3">
+                        <div
+                            class="flex h-8 w-8 items-center justify-center text-gray-400 transition-colors group-hover:text-[#229ebd]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                                ></path>
+                            </svg>
+                        </div>
+                        <span
+                            class="font-bogart text-sm text-gray-600 transition-colors group-hover:text-gray-800 md:text-base"
+                            >Bình nước nóng/lạnh</span
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="mb-16"
+                id="location"
+                data-aos="fade-up"
+                data-aos-delay="200"
+            >
+                <div class="mb-8 flex items-center gap-3">
+                    <div class="h-8 w-1.5 rounded-full bg-[#229ebd]"></div>
+                    <h2
+                        class="font-artusi text-2xl font-black text-[#18233B] md:text-3xl"
+                    >
+                        Vị trí & Điểm đến lân cận
+                    </h2>
+                </div>
+
+                <div
+                    class="rounded-[2rem] border border-gray-100 bg-white p-6 shadow-sm md:p-8"
+                >
+                    <div class="flex flex-col gap-8 lg:flex-row">
+                        <div
+                            class="group relative h-[400px] w-full overflow-hidden rounded-3xl bg-gray-100 shadow-inner lg:w-1/2"
+                        >
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3835.673636140526!2d108.2595011752502!3d15.978410941862526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314210f2d038af0f%3A0x51c64b1130497f99!2sFPT%20Software%20Danang!5e0!3m2!1svi!2s!4v1763992752719!5m2!1svi!2s"
+                                width="580"
+                                height="415"
+                                style="border: 0"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                            ></iframe>
+
+                            <a
+                                href="https://maps.app.goo.gl/XYZ"
+                                target="_blank"
+                                class="absolute right-4 bottom-4 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#229ebd] shadow-lg transition-all hover:bg-[#229ebd] hover:text-white"
+                            >
+                                Xem Google Maps
+                                <svg
+                                    class="h-3 w-3"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                    ></path>
+                                </svg>
+                            </a>
+                        </div>
+
+                        <div
+                            class="flex w-full flex-col justify-between lg:w-1/2"
+                        >
+                            <div class="mb-8 border-b border-gray-100 pb-6">
+                                <h3
+                                    class="font-artusi mb-2 text-lg font-bold text-[#18233B]"
+                                >
+                                    Địa chỉ Dozzie
+                                </h3>
+                                <p
+                                    class="font-bogart text-sm leading-relaxed text-gray-500"
+                                >
+                                    Hoà Hải, Ngũ Hành Sơn, Thành phố Đà Nẵng,
+                                    Việt Nam.
+                                </p>
+                            </div>
+
+                            <div>
+                                <div
+                                    class="mb-6 flex items-center justify-between"
+                                >
+                                    <h3
+                                        class="font-artusi text-lg font-bold text-[#18233B]"
+                                    >
+                                        Địa điểm thú vị gần đây
+                                    </h3>
+                                    <a
+                                        href="#"
+                                        class="text-xs font-bold text-[#229ebd] hover:underline"
+                                        >Xem tất cả</a
+                                    >
+                                </div>
+
+                                <div class="space-y-6">
+                                    <div
+                                        class="group flex cursor-pointer items-start justify-between"
+                                    >
+                                        <div>
+                                            <h4
+                                                class="font-bold text-gray-700 transition-colors group-hover:text-[#229ebd]"
+                                            >
+                                                Cầu Rồng Đà Nẵng
+                                            </h4>
+                                            <p
+                                                class="mt-1 text-xs text-gray-400"
+                                            >
+                                                Biểu tượng của thành phố, phun
+                                                lửa vào cuối tuần.
+                                            </p>
+                                        </div>
+                                        <span
+                                            class="rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-[#229ebd]"
+                                            >0.5 km</span
+                                        >
+                                    </div>
+
+                                    <div
+                                        class="group flex cursor-pointer items-start justify-between"
+                                    >
+                                        <div>
+                                            <h4
+                                                class="font-bold text-gray-700 transition-colors group-hover:text-[#229ebd]"
+                                            >
+                                                Chợ Hàn
+                                            </h4>
+                                            <p
+                                                class="mt-1 text-xs text-gray-400"
+                                            >
+                                                Thiên đường ẩm thực và quà lưu
+                                                niệm địa phương.
+                                            </p>
+                                        </div>
+                                        <span
+                                            class="rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-[#229ebd]"
+                                            >0.8 km</span
+                                        >
+                                    </div>
+
+                                    <div
+                                        class="group flex cursor-pointer items-start justify-between"
+                                    >
+                                        <div>
+                                            <h4
+                                                class="font-bold text-gray-700 transition-colors group-hover:text-[#229ebd]"
+                                            >
+                                                Bảo tàng Chăm
+                                            </h4>
+                                            <p
+                                                class="mt-1 text-xs text-gray-400"
+                                            >
+                                                Lưu giữ nét văn hóa Chăm Pa độc
+                                                đáo nhất thế giới.
+                                            </p>
+                                        </div>
+                                        <span
+                                            class="rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-[#229ebd]"
+                                            >1.2 km</span
+                                        >
+                                    </div>
+
+                                    <div
+                                        class="group flex cursor-pointer items-start justify-between"
+                                    >
+                                        <div>
+                                            <h4
+                                                class="font-bold text-gray-700 transition-colors group-hover:text-[#229ebd]"
+                                            >
+                                                Công viên APEC
+                                            </h4>
+                                            <p
+                                                class="mt-1 text-xs text-gray-400"
+                                            >
+                                                Địa điểm check-in kiến trúc cánh
+                                                diều ấn tượng.
+                                            </p>
+                                        </div>
+                                        <span
+                                            class="rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-[#229ebd]"
+                                            >1.5 km</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="mb-16"
+                id="policy"
+                data-aos="fade-up"
+                data-aos-delay="300"
+            >
+                <div class="mb-8 flex items-center gap-3">
+                    <div class="h-8 w-1.5 rounded-full bg-[#229ebd]"></div>
+                    <h2
+                        class="font-artusi text-2xl font-black text-[#18233B] md:text-3xl"
+                    >
+                        Chính sách lưu trú
+                    </h2>
+                </div>
+
+                <div
+                    class="rounded-[2rem] border border-gray-100 bg-white p-8 shadow-sm"
+                >
+                    <div
+                        class="mb-8 grid grid-cols-1 gap-8 border-b border-gray-100 pb-8 lg:grid-cols-3"
+                    >
+                        <div
+                            class="font-artusi text-lg font-bold text-gray-800"
+                        >
+                            Quy trình nhận phòng
+                        </div>
+
+                        <div class="space-y-8 lg:col-span-2">
+                            <div>
+                                <div
+                                    class="font-bogart mb-2 flex justify-between"
+                                >
+                                    <span class="font-bold text-gray-600"
+                                        >Giờ Check-in</span
+                                    >
+                                    <span
+                                        class="text-lg font-black text-[#229ebd]"
+                                        >24/7 Linh hoạt</span
+                                    >
+                                </div>
+                                <div class="relative pt-6">
+                                    <div
+                                        class="h-3 w-full overflow-hidden rounded-full bg-gray-100"
+                                    >
+                                        <div
+                                            class="h-full w-full rounded-full bg-[#229ebd] shadow-sm"
+                                        ></div>
+                                    </div>
+                                    <div
+                                        class="mt-2 flex justify-between text-[10px] font-bold tracking-wider text-gray-400 uppercase"
+                                    >
+                                        <span>00:00</span>
+                                        <span>12:00</span>
+                                        <span>23:59</span>
+                                    </div>
+                                    <div class="absolute top-0 right-0 -mt-1">
+                                        <span
+                                            class="rounded-md bg-[#229ebd] px-2 py-1 text-[10px] font-bold text-white shadow-md"
+                                            >Tự do check-in tại Kiosk</span
+                                        >
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-xs text-gray-400 italic">
+                                    *Đối với khách qua đêm: Giờ nhận phòng tiêu
+                                    chuẩn là 14:00
+                                </p>
+                            </div>
+
+                            <div>
+                                <div
+                                    class="font-bogart mb-2 flex justify-between"
+                                >
+                                    <span class="font-bold text-gray-600"
+                                        >Giờ Check-out</span
+                                    >
+                                    <span
+                                        class="text-lg font-black text-[#18233B]"
+                                        >Theo gói đã đặt</span
+                                    >
+                                </div>
+                                <div class="relative pt-6">
+                                    <div
+                                        class="h-3 w-full overflow-hidden rounded-full bg-gray-100"
+                                    >
+                                        <div
+                                            class="h-full w-2/3 rounded-full bg-[#18233B] shadow-sm"
+                                        ></div>
+                                    </div>
+                                    <div
+                                        class="mt-2 flex justify-between text-[10px] font-bold tracking-wider text-gray-400 uppercase"
+                                    >
+                                        <span>Check-in</span>
+                                        <span>Gói 3h/6h/12h</span>
+                                        <span>Check-out</span>
+                                    </div>
+                                    <div
+                                        class="absolute top-0 left-[60%] -mt-1"
+                                    >
+                                        <span
+                                            class="rounded-md bg-[#18233B] px-2 py-1 text-[10px] font-bold text-white shadow-md"
+                                            >Trả phòng đúng giờ</span
+                                        >
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-xs text-gray-400 italic">
+                                    *Đối với khách qua đêm: Giờ trả phòng tiêu
+                                    chuẩn là 12:00 hôm sau
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                        <div>
+                            <h4
+                                class="font-artusi mb-3 font-bold text-gray-800"
+                            >
+                                Hoàn tiền & Đổi lịch
+                            </h4>
+                            <p
+                                class="font-bogart text-sm leading-relaxed text-gray-500"
+                            >
+                                Miễn phí hủy phòng hoặc đổi lịch trước
+                                <strong class="text-gray-700">24h</strong>. Hủy
+                                trong vòng 24h hoặc không đến (no-show) sẽ không
+                                được hoàn tiền.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4
+                                class="font-artusi mb-3 font-bold text-gray-800"
+                            >
+                                Chính sách Trẻ em
+                            </h4>
+                            <ul
+                                class="font-bogart list-disc space-y-1 pl-4 text-sm leading-relaxed text-gray-500"
+                            >
+                                <li>
+                                    Trẻ em trên 10 tuổi được tính là người lớn.
+                                </li>
+                                <li>
+                                    Kén đơn chỉ dành cho 01 người. Trẻ em đi
+                                    cùng cần có sự giám sát và nên đặt kén cạnh
+                                    bố mẹ.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4
+                                class="font-artusi mb-3 font-bold text-gray-800"
+                            >
+                                Quy định chung
+                            </h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start gap-3">
+                                    <div
+                                        class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-red-50 text-red-500"
+                                    >
+                                        <svg
+                                            class="h-3 w-3"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="block text-sm font-bold text-gray-700"
+                                            >Không thú cưng</span
+                                        >
+                                        <span class="text-xs text-gray-400"
+                                            >Rất tiếc, boss mèo/chó không được
+                                            vào kén.</span
+                                        >
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div
+                                        class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-red-50 text-red-500"
+                                    >
+                                        <svg
+                                            class="h-3 w-3"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="block text-sm font-bold text-gray-700"
+                                            >Không hút thuốc</span
+                                        >
+                                        <span class="text-xs text-gray-400"
+                                            >Tuyệt đối cấm hút thuốc trong kén
+                                            ngủ.</span
+                                        >
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div
+                                        class="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-yellow-50 text-yellow-600"
+                                    >
+                                        <svg
+                                            class="h-3 w-3"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="block text-sm font-bold text-gray-700"
+                                            >Ăn uống</span
+                                        >
+                                        <span class="text-xs text-gray-400"
+                                            >Vui lòng sử dụng khu vực Pantry
+                                            chung.</span
+                                        >
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="mb-16"
+                id="reviews"
+                data-aos="fade-up"
+                data-aos-delay="400"
+            >
+                <div
+                    class="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end"
+                >
+                    <div>
+                        <div class="mb-2 flex items-center gap-3">
+                            <div
+                                class="h-8 w-1.5 rounded-full bg-[#229ebd]"
+                            ></div>
+                            <h2
+                                class="font-artusi text-2xl font-black text-[#18233B] md:text-3xl"
+                            >
+                                Đánh giá từ khách hàng
+                            </h2>
+                        </div>
+
+                        <div class="ml-4 flex items-center gap-4">
+                            <div
+                                class="flex items-center gap-1 text-lg text-yellow-400"
+                            >
+                                <i class="fas fa-star"></i>★★★★☆
+                            </div>
+                            <span class="text-lg font-bold text-gray-600"
+                                >4.9<span
+                                    class="text-sm font-normal text-gray-400"
+                                    >/5</span
+                                ></span
+                            >
+                            <span class="text-sm text-gray-400"
+                                >• Dựa trên 537 đánh giá</span
+                            >
+                        </div>
+                    </div>
+
+                    <button
+                        id="btn-write-review-page"
+                        class="flex items-center gap-2 rounded-full border-2 border-[#229ebd] bg-white px-6 py-2 font-bold text-[#229ebd] transition-all hover:bg-[#229ebd] hover:text-white"
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            ></path>
+                        </svg>
+                        Viết đánh giá
+                    </button>
+                </div>
+
+                <div class="swiper reviewPageSwiper !pb-12">
+                    <div class="swiper-wrapper" id="review-page-list">
+                        <div class="swiper-slide h-auto">
+                            <div
+                                class="h-full animate-pulse rounded-2xl border border-gray-100 bg-gray-50 p-6"
+                            >
+                                <div class="mb-4 flex items-center gap-3">
+                                    <div
+                                        class="h-10 w-10 rounded-full bg-gray-200"
+                                    ></div>
+                                    <div class="space-y-2">
+                                        <div
+                                            class="h-4 w-24 rounded bg-gray-200"
+                                        ></div>
+                                        <div
+                                            class="h-3 w-16 rounded bg-gray-200"
+                                        ></div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="mb-2 h-4 w-full rounded bg-gray-200"
+                                ></div>
+                                <div
+                                    class="h-4 w-2/3 rounded bg-gray-200"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </section>
+            <div class="mb-12 text-center" data-aos="fade-down">
+                <h1
+                    class="font-artusi mb-3 text-4xl font-bold text-gray-800 md:text-5xl"
+                >
+                    Hoàn tất đặt phòng
+                </h1>
+                <p class="mx-auto max-w-2xl text-lg text-gray-500">
+                    Chỉ còn vài bước nữa để tận hưởng giấc ngủ tuyệt vời tại
+                    Dozzie. Hãy chọn thời gian phù hợp với bạn.
+                </p>
+            </div>
+
+            <div
+                class="flex flex-col items-start gap-8 lg:flex-row"
+                id="select-room"
+            >
+                <div
+                    class="relative w-full overflow-hidden rounded-[2rem] border border-white bg-white p-8 shadow-xl shadow-blue-100/50 lg:w-1/3"
+                    data-aos="fade-right"
+                    data-aos-delay="100"
+                >
+                    <div
+                        class="pointer-events-none absolute -top-10 -right-10 h-32 w-32 rounded-full bg-[#229ebd]/5 blur-2xl"
+                    ></div>
+
+                    <h2
+                        class="font-artusi mb-6 flex items-center gap-3 border-b border-gray-100 pb-4 text-2xl font-bold text-gray-800"
+                    >
+                        <span
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-[#229ebd] text-sm text-white"
+                            >1</span
+                        >
+                        Thông Tin Đặt
+                    </h2>
+
+                    <form id="booking-form" class="relative z-10 space-y-5">
+                        <div
+                            class="rounded-2xl border border-blue-100 bg-blue-50 p-4"
+                        >
+                            <label
+                                class="mb-2 ml-1 block text-xs font-bold tracking-wider text-gray-400 uppercase"
+                                >Yêu cầu đặt chỗ</label
+                            >
+
+                            <div class="flex gap-4">
+                                <div
+                                    class="flex flex-1 items-center justify-between rounded-xl border border-blue-200 bg-white p-3 shadow-sm"
+                                >
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="flex h-8 w-8 items-center justify-center rounded-full bg-[#18233B] text-xs font-bold text-white"
+                                            >M</span
+                                        >
+                                        <div>
+                                            <p
+                                                class="font-artusi text-sm font-bold text-gray-700"
+                                            >
+                                                Nam
+                                            </p>
+                                            <p
+                                                class="text-[10px] font-bold text-gray-400 uppercase"
+                                            >
+                                                Tầng 3
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span
+                                            class="text-lg font-black text-[#229ebd]"
+                                            id="req-male"
+                                            >0</span
+                                        >
+                                        <span
+                                            class="block text-xs font-bold text-gray-400"
+                                            >kén</span
+                                        >
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex flex-1 items-center justify-between rounded-xl border border-pink-200 bg-white p-3 shadow-sm"
+                                >
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="flex h-8 w-8 items-center justify-center rounded-full bg-[#d946ef] text-xs font-bold text-white"
+                                            >FM</span
+                                        >
+                                        <div>
+                                            <p
+                                                class="font-artusi text-sm font-bold text-gray-700"
+                                            >
+                                                Nữ
+                                            </p>
+                                            <p
+                                                class="text-[10px] font-bold text-gray-400 uppercase"
+                                            >
+                                                Tầng 2
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span
+                                            class="text-lg font-black text-[#d946ef]"
+                                            id="req-female"
+                                            >0</span
+                                        >
+                                        <span
+                                            class="block text-xs font-bold text-gray-400"
+                                            >kén</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="mt-3 flex items-center justify-between px-1 text-xs font-bold"
+                            >
+                                <span class="text-gray-500"
+                                    >Đã chọn:
+                                    <span
+                                        id="selected-count-display"
+                                        class="text-[#229ebd]"
+                                        >0</span
+                                    >
+                                    phòng</span
+                                >
+                                <span
+                                    id="selection-status"
+                                    class="flex items-center gap-1 text-orange-500"
+                                >
+                                    <svg
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                        ></path>
+                                    </svg>
+                                    Chưa đủ số lượng
+                                </span>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="selected-room-ids" />
+
+                        <div class="group">
+                            <label
+                                class="mb-1 ml-1 block text-xs font-bold tracking-wider text-gray-400 uppercase"
+                                >Ngày Check-in</label
+                            >
+                            <input
+                                type="date"
+                                id="date-select"
+                                class="w-full cursor-pointer rounded-2xl border border-gray-200 bg-gray-50 p-4 font-bold text-gray-700 transition-all outline-none focus:border-[#229ebd] focus:bg-white focus:ring-2 focus:ring-[#229ebd]"
+                                required
+                            />
+                        </div>
+
+                        <div class="my-2 h-px w-full bg-gray-100"></div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="group">
+                                <label
+                                    class="mb-1 ml-1 block text-xs font-bold tracking-wider text-gray-400 uppercase"
+                                    >Giờ vào</label
+                                >
+                                <input
+                                    type="time"
+                                    id="start-time"
+                                    class="w-full cursor-pointer rounded-2xl border border-gray-200 bg-gray-50 p-4 text-center font-bold text-gray-700 transition-all outline-none focus:border-[#229ebd] focus:bg-white focus:ring-2 focus:ring-[#229ebd]"
+                                    required
+                                />
+                            </div>
+
+                            <div class="group">
+                                <label
+                                    class="mb-1 ml-1 block text-xs font-bold tracking-wider text-gray-400 uppercase"
+                                    >Gói giờ</label
+                                >
+                                <div
+                                    class="relative transition-all duration-300 focus-within:-translate-y-1"
+                                >
+                                    <select
+                                        id="duration-select"
+                                        class="w-full cursor-pointer appearance-none rounded-2xl border border-gray-200 bg-gray-50 p-4 font-bold text-gray-700 transition-all outline-none focus:border-[#229ebd] focus:bg-white focus:ring-2 focus:ring-[#229ebd]"
+                                    >
+                                        <option value="3">3 Tiếng</option>
+                                        <option value="6">6 Tiếng</option>
+                                        <option value="12">12 Tiếng</option>
+                                    </select>
+                                    <div
+                                        class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#229ebd]"
+                                    >
+                                        <svg
+                                            class="h-4 w-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="animate-pulse-slow flex items-center justify-between rounded-2xl border border-[#229ebd]/20 bg-[#229ebd]/10 p-4"
+                        >
+                            <p class="text-sm font-bold text-[#229ebd]">
+                                Giờ trả phòng (dự kiến):
+                            </p>
+                            <p
+                                id="end-time-display"
+                                class="font-artusi text-xl font-black text-[#229ebd]"
+                            >
+                                --:--
+                            </p>
+                            <input type="hidden" id="hidden-end-date-iso" />
+                        </div>
+
+                        <div class="my-2 h-px w-full bg-gray-100"></div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label
+                                    class="mb-1 ml-1 block text-xs font-bold tracking-wider text-gray-400 uppercase"
+                                    >Họ Tên</label
+                                >
+                                <input
+                                    type="text"
+                                    id="guest-name"
+                                    class="w-full rounded-xl border border-gray-200 bg-white p-3 text-gray-800 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-[#229ebd]"
+                                    required
+                                    placeholder="Nhập tên của bạn..."
+                                />
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        class="mb-1 ml-1 block text-xs font-bold tracking-wider text-gray-400 uppercase"
+                                        >Số ĐT</label
+                                    >
+                                    <input
+                                        type="tel"
+                                        id="guest-phone"
+                                        class="w-full rounded-xl border border-gray-200 bg-white p-3 text-gray-800 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-[#229ebd]"
+                                        required
+                                        placeholder="090..."
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        class="mb-1 ml-1 block text-xs font-bold tracking-wider text-gray-400 uppercase"
+                                        >Email</label
+                                    >
+                                    <input
+                                        type="email"
+                                        id="guest-email"
+                                        class="w-full rounded-xl border border-gray-200 bg-white p-3 text-gray-800 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-[#229ebd]"
+                                        required
+                                        placeholder="email@..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            id="btn-confirm-booking"
+                            type="submit"
+                            disabled
+                            class="group mt-6 flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-2xl bg-gray-300 py-4 text-lg font-bold text-white shadow-none transition-all duration-300"
+                        >
+                            <span>XÁC NHẬN ĐẶT</span>
+                            <svg
+                                class="h-5 w-5 transform transition-transform group-hover:translate-x-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                ></path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="w-full space-y-8 lg:w-2/3">
+                    <div
+                        class="flex flex-wrap justify-center gap-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm"
+                        data-aos="fade-down"
+                    >
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="h-6 w-6 rounded border-2 border-gray-200 bg-white"
+                            ></div>
+                            <span class="text-sm font-bold text-gray-600"
+                                >Trống</span
+                            >
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="h-6 w-6 rounded border-2 border-[#229ebd] bg-[#229ebd]"
+                            ></div>
+                            <span class="text-sm font-bold text-gray-600"
+                                >Bạn đang chọn</span
+                            >
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="h-6 w-6 rounded border-2 border-gray-200 bg-gray-200 opacity-50"
+                            ></div>
+                            <span class="text-sm font-bold text-gray-400"
+                                >Đã được đặt</span
+                            >
+                        </div>
+                    </div>
+
+                    <div
+                        class="relative overflow-hidden rounded-[2.5rem] border-4 border-white bg-white p-6 shadow-xl shadow-blue-100 md:p-8"
+                        data-aos="fade-up"
+                    >
+                        <div
+                            class="font-artusi absolute top-0 left-0 z-10 rounded-br-2xl bg-[#18233B] px-6 py-2 font-bold text-white"
+                        >
+                            TẦNG 3 - KHU NAM (M)
+                        </div>
+
+                        <div
+                            class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5"
+                            id="map-floor-male"
+                        ></div>
+                    </div>
+
+                    <div
+                        class="relative overflow-hidden rounded-[2.5rem] border-4 border-white bg-white p-6 shadow-xl shadow-pink-100 md:p-8"
+                        data-aos="fade-up"
+                        data-aos-delay="100"
+                    >
+                        <div
+                            class="font-artusi absolute top-0 left-0 z-10 rounded-br-2xl bg-[#d946ef] px-6 py-2 font-bold text-white"
+                        >
+                            TẦNG 2 - KHU NỮ (FM)
+                        </div>
+
+                        <div
+                            class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5"
+                            id="map-floor-female"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="/js/components.js"></script>
+        <script src="/js/main.js"></script>
+        <script src="/js/booking.js"></script>
+    </body>
+    <div id="app-footer"></div>
+</html>
