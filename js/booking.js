@@ -278,7 +278,7 @@ async function checkAvailabilityAndCalcTime() {
     await fetchAndMarkBusyRooms();
 }
 
-// --- HÀM CHECK PHÒNG BỊ KẸT ---
+// --- HÀM CHECK PHÒNG BỊ KẸT (Đã fix logic giờ giấc) ---
 async function fetchAndMarkBusyRooms() {
     const dateStr = document.getElementById('date-select').value;
     const timeStr = document.getElementById('start-time').value;
@@ -288,16 +288,25 @@ async function fetchAndMarkBusyRooms() {
 
     if (!dateStr || !timeStr) return;
 
-    const userStart = new Date(`${dateStr}T${timeStr}:00`);
-    const userEnd = new Date(userStart.getTime() + duration * 60 * 60 * 1000);
+    // 1. Tạo mốc thời gian khách đang chọn (Lấy timestamp số cho chuẩn)
+    const userStartObj = new Date(`${dateStr}T${timeStr}:00`);
+    const userEndObj = new Date(
+        userStartObj.getTime() + duration * 60 * 60 * 1000,
+    );
+
+    const userStartTime = userStartObj.getTime();
+    const userEndTime = userEndObj.getTime();
 
     try {
-        // Reset trạng thái phòng
+        // Reset trạng thái phòng trước khi vẽ lại
         document.querySelectorAll('.room-pod').forEach((el) => {
             el.classList.remove('booked-pod');
-            el.innerHTML = `<span class="font-bold text-xs text-gray-500 pointer-events-none">${el.getAttribute('data-id')}</span>`;
+            // Reset lại nội dung (Lấy lại tên phòng từ data-id)
+            const roomId = el.getAttribute('data-id');
+            el.innerHTML = `<span class="font-bold text-xs text-gray-500 pointer-events-none">${roomId}</span>`;
         });
 
+        // 2. Gọi API lấy danh sách booking trong ngày
         const res = await fetch(
             `https://dozzie-server.onrender.com/api/bookings?date=${dateStr}`,
         );
@@ -305,27 +314,40 @@ async function fetchAndMarkBusyRooms() {
         const bookings = result.data || [];
         const busyRoomIds = [];
 
+        // 3. Duyệt từng booking để tìm phòng kẹt
         bookings.forEach((booking) => {
-            const bookStart = new Date(booking.startTime);
-            const bookEnd = new Date(booking.endTime);
-            const isOverlap = bookStart < userEnd && bookEnd > userStart;
+            // Chuyển giờ trong DB (UTC) sang timestamp số
+            const bookStartTime = new Date(booking.startTime).getTime();
+            const bookEndTime = new Date(booking.endTime).getTime();
+
+            // Logic Check Trùng (Overlap):
+            // (Start A < End B) AND (End A > Start B)
+            const isOverlap =
+                bookStartTime < userEndTime && bookEndTime > userStartTime;
 
             if (isOverlap) {
+                // Nếu trùng -> Nhét hết roomIds của booking đó vào danh sách bận
                 booking.roomIds.forEach((id) => {
                     if (!busyRoomIds.includes(id)) busyRoomIds.push(id);
                 });
             }
         });
 
-        // Tô màu phòng bận
+        console.log('Danh sách phòng bận:', busyRoomIds); // Log ra để debug nếu cần
+
+        // 4. Tô màu phòng bận lên UI
         busyRoomIds.forEach((id) => {
             const el = document.querySelector(`.room-pod[data-id="${id}"]`);
             if (el) {
+                // Thêm class bận
                 el.classList.add('booked-pod');
+                // Nếu lỡ đang chọn phòng này thì bỏ chọn ngay
                 el.classList.remove('selected-pod');
+                // Đổi nội dung thành chữ "Bận"
                 el.innerHTML =
                     '<span class="font-bold text-[10px] text-gray-400 transform -rotate-45">Bận</span>';
 
+                // Cập nhật lại mảng selectedRooms của sếp nếu lỡ bị xoá
                 if (selectedRooms.includes(id)) {
                     selectedRooms = selectedRooms.filter((r) => r !== id);
                     updateSelectionStatus();
@@ -336,7 +358,6 @@ async function fetchAndMarkBusyRooms() {
         console.error('Lỗi check phòng:', err);
     }
 }
-
 // --- HÀM VẼ SÀN ---
 function renderFloor(containerId, prefix, totalRooms) {
     const container = document.getElementById(containerId);
