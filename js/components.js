@@ -6,7 +6,7 @@ function renderNavbar() {
         <div class="container mx-auto px-4 flex justify-between items-center relative">
             
             <a href="/" class="flex items-center space-x-2 group">
-                <img src="/assets/imgs/logo_dozzie.png" alt="Dozzie Logo" class="h-8 group-hover:scale-105 transition-transform">
+                <img src="./assets/imgs/logo_dozzie.png" alt="Dozzie Logo" class="h-8 group-hover:scale-105 transition-transform">
             </a>
 
             <div class="hidden lg:flex items-center space-x-8">
