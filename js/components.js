@@ -171,3 +171,6 @@ function renderFooter() {
         footerPlaceholder.innerHTML = footerHTML;
     }
 }
+
+renderNavbar();
+renderFooter();
