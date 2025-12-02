@@ -15,6 +15,9 @@ export default defineConfig({
                 booking: resolve(__dirname, 'book-now.html'),
                 blog: resolve(__dirname, 'blog.html'),
                 faq: resolve(__dirname, 'faq.html'),
+                about: resolve(__dirname, 'about.html'),
+                membership: resolve(__dirname, 'membership.html'),
+                features: resolve(__dirname, 'features.html')
             },
         },
     },
