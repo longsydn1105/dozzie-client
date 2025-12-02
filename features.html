@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tiện ích & Dịch vụ - Dozzie</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="./src/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Prata&display=swap"
+            rel="stylesheet"
+        />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            artusi: ['Prata', 'serif'],
+                            bogart: ['Fraunces', 'serif'],
+                        },
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="font-bogart bg-white text-gray-700 antialiased">
+        <div id="app-navbar" class="sticky top-0 z-50 w-full"></div>
+
+        <section class="bg-[#229ebd]/5 py-20 text-center">
+            <div class="container mx-auto px-4" data-aos="fade-down">
+                <span
+                    class="font-artusi mb-2 block text-sm font-bold tracking-widest text-[#229ebd] uppercase"
+                    >Trải nghiệm trọn vẹn</span
+                >
+                <h1
+                    class="font-artusi text-4xl font-black text-[#18233B] md:text-5xl"
+                >
+                    Các Tiện Ích Của Chúng Tôi
+                </h1>
+                <p
+                    class="font-bogart mx-auto mt-4 max-w-2xl text-lg text-gray-500"
+                >
+                    Mọi chi tiết tại Dozzie đều được thiết kế để mang lại sự
+                    thoải mái tối đa trong không gian tối giản.
+                </p>
+            </div>
+        </section>
+
+        <div
+            class="sticky top-[72px] z-40 mb-16 border-y border-gray-100 bg-white/90 py-4 backdrop-blur-md"
+        >
+            <div
+                class="container mx-auto flex justify-center gap-8 overflow-x-auto px-4 md:gap-16"
+            >
+                <a
+                    href="#buong-ngu"
+                    class="font-artusi group flex items-center gap-2 font-bold text-gray-500 transition hover:text-[#229ebd]"
+                >
+                    <svg
+                        class="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                        ></path>
+                    </svg>
+                    Buồng Ngủ
+                    <span
+                        class="block h-0.5 w-0 bg-[#229ebd] transition-all duration-300 group-hover:w-full"
+                    ></span>
+                </a>
+                <a
+                    href="#ca-nhan"
+                    class="font-artusi group flex items-center gap-2 font-bold text-gray-500 transition hover:text-[#229ebd]"
+                >
+                    <svg
+                        class="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        ></path>
+                    </svg>
+                    Cá Nhân
+                    <span
+                        class="block h-0.5 w-0 bg-[#229ebd] transition-all duration-300 group-hover:w-full"
+                    ></span>
+                </a>
+                <a
+                    href="#khu-chung"
+                    class="font-artusi group flex items-center gap-2 font-bold text-gray-500 transition hover:text-[#229ebd]"
+                >
+                    <svg
+                        class="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        ></path>
+                    </svg>
+                    Khu Vực Chung
+                    <span
+                        class="block h-0.5 w-0 bg-[#229ebd] transition-all duration-300 group-hover:w-full"
+                    ></span>
+                </a>
+            </div>
+        </div>
+
+        <main class="container mx-auto mb-20 max-w-5xl space-y-32 px-4">
+            <section id="buong-ngu" class="scroll-mt-40">
+                <div class="mb-12 text-center" data-aos="fade-up">
+                    <div
+                        class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#229ebd]/10 text-[#229ebd]"
+                    >
+                        <svg
+                            class="h-8 w-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                            ></path>
+                        </svg>
+                    </div>
+                    <h2 class="font-artusi text-3xl font-bold text-[#18233B]">
+                        Buồng Ngủ (Pods)
+                    </h2>
+                </div>
+
+                <div
+                    class="group mb-16 flex flex-col items-center gap-10 md:flex-row"
+                >
+                    <div
+                        class="w-full overflow-hidden rounded-[2rem] shadow-lg md:w-1/2"
+                        data-aos="fade-right"
+                    >
+                        <img
+                            src="./assets/imgs/feature-1.jpeg"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    </div>
+                    <div class="w-full md:w-1/2" data-aos="fade-left">
+                        <h3
+                            class="font-artusi mb-3 text-2xl font-bold text-[#18233B]"
+                        >
+                            Tiện nghi công nghệ cao
+                        </h3>
+                        <p class="leading-relaxed text-gray-500">
+                            Mỗi kén ngủ được trang bị hệ thống đèn Mood Lighting
+                            tùy chỉnh, ổ cắm đa năng, két an toàn cá nhân và
+                            bảng điều khiển cảm ứng hiện đại.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="group mb-16 flex flex-col items-center gap-10 md:flex-row-reverse"
+                >
+                    <div
+                        class="w-full overflow-hidden rounded-[2rem] shadow-lg md:w-1/2"
+                        data-aos="fade-left"
+                    >
+                        <img
+                            src="./assets/imgs/feature-2.jpeg"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    </div>
+                    <div
+                        class="w-full text-right md:w-1/2"
+                        data-aos="fade-right"
+                    >
+                        <h3
+                            class="font-artusi mb-3 text-2xl font-bold text-[#18233B]"
+                        >
+                            Chăn ga tiêu chuẩn 5 sao
+                        </h3>
+                        <p class="leading-relaxed text-gray-500">
+                            Sử dụng chất liệu cotton 100% cao cấp, mềm mại và
+                            thoáng khí. Quy trình giặt là công nghiệp đảm bảo vệ
+                            sinh tuyệt đối sau mỗi lượt khách.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="group mb-16 flex flex-col items-center gap-10 md:flex-row"
+                >
+                    <div
+                        class="w-full overflow-hidden rounded-[2rem] shadow-lg md:w-1/2"
+                        data-aos="fade-right"
+                    >
+                        <img
+                            src="./assets/imgs/feature-3.png"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    </div>
+                    <div class="w-full md:w-1/2" data-aos="fade-left">
+                        <h3
+                            class="font-artusi mb-3 text-2xl font-bold text-[#18233B]"
+                        >
+                            Nệm cao su non
+                        </h3>
+                        <p class="leading-relaxed text-gray-500">
+                            Nệm King Koil cao cấp với độ đàn hồi hoàn hảo, nâng
+                            đỡ cột sống, mang lại giấc ngủ sâu và sảng khoái
+                            nhất.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-100" />
+
+            <section id="ca-nhan" class="scroll-mt-40">
+                <div class="mb-12 text-center" data-aos="fade-up">
+                    <div
+                        class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#229ebd]/10 text-[#229ebd]"
+                    >
+                        <svg
+                            class="h-8 w-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            ></path>
+                        </svg>
+                    </div>
+                    <h2 class="font-artusi text-3xl font-bold text-[#18233B]">
+                        Tiện Nghi Cá Nhân
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    <div
+                        class="rounded-3xl bg-[#f8faff] p-6 text-center transition-all hover:shadow-md"
+                        data-aos="fade-up"
+                        data-aos-delay="0"
+                    >
+                        <img
+                            src="./assets/imgs/feature-5.jpeg"
+                            class="mb-4 h-40 w-full rounded-xl object-cover"
+                        />
+                        <h3
+                            class="font-artusi text-xl font-bold text-[#18233B]"
+                        >
+                            Khăn tắm & Khăn mặt
+                        </h3>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Bộ khăn cotton 100% dày dặn, thấm hút tốt, được đóng
+                            gói tiệt trùng.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-3xl bg-[#f8faff] p-6 text-center transition-all hover:shadow-md"
+                        data-aos="fade-up"
+                        data-aos-delay="100"
+                    >
+                        <img
+                            src="./assets/imgs/feature-6.jpeg"
+                            class="mb-4 h-40 w-full rounded-xl object-cover"
+                        />
+                        <h3
+                            class="font-artusi text-xl font-bold text-[#18233B]"
+                        >
+                            Bộ vệ sinh cá nhân
+                        </h3>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Dầu gội, sữa tắm organic hương thiên nhiên và kem
+                            dưỡng da tay miễn phí.
+                        </p>
+                    </div>
+                    <div
+                        class="rounded-3xl bg-[#f8faff] p-6 text-center transition-all hover:shadow-md"
+                        data-aos="fade-up"
+                        data-aos-delay="200"
+                    >
+                        <img
+                            src="./assets/imgs/feature-7.jpeg"
+                            class="mb-4 h-40 w-full rounded-xl object-cover"
+                        />
+                        <h3
+                            class="font-artusi text-xl font-bold text-[#18233B]"
+                        >
+                            Personal Kit
+                        </h3>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Bàn chải, kem đánh răng, lược, chụp tai chống ồn và
+                            dép đi trong nhà.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-100" />
+
+            <section id="khu-chung" class="scroll-mt-40">
+                <div class="mb-12 text-center" data-aos="fade-up">
+                    <div
+                        class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#229ebd]/10 text-[#229ebd]"
+                    >
+                        <svg
+                            class="h-8 w-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                            ></path>
+                        </svg>
+                    </div>
+                    <h2 class="font-artusi text-3xl font-bold text-[#18233B]">
+                        Khu Vực Chung
+                    </h2>
+                </div>
+
+                <div
+                    class="group mb-16 flex flex-col items-center gap-10 md:flex-row"
+                >
+                    <div
+                        class="w-full overflow-hidden rounded-[2rem] shadow-lg md:w-1/2"
+                        data-aos="fade-right"
+                    >
+                        <img
+                            src="./assets/imgs/feature-8.jpeg"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    </div>
+                    <div class="w-full md:w-1/2" data-aos="fade-left">
+                        <h3
+                            class="font-artusi mb-3 text-2xl font-bold text-[#18233B]"
+                        >
+                            Co-working Space
+                        </h3>
+                        <p class="leading-relaxed text-gray-500">
+                            Không gian làm việc mở với Wifi tốc độ cao, ổ cắm
+                            điện khắp mọi nơi và bàn ghế ergonomic thoải mái.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="group flex flex-col items-center gap-10 md:flex-row-reverse"
+                >
+                    <div
+                        class="w-full overflow-hidden rounded-[2rem] shadow-lg md:w-1/2"
+                        data-aos="fade-left"
+                    >
+                        <img
+                            src="./assets/imgs/feature-9.jpeg"
+                            class="h-64 w-full transform object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    </div>
+                    <div
+                        class="w-full text-right md:w-1/2"
+                        data-aos="fade-right"
+                    >
+                        <h3
+                            class="font-artusi mb-3 text-2xl font-bold text-[#18233B]"
+                        >
+                            Pantry & Vending Machine
+                        </h3>
+                        <p class="leading-relaxed text-gray-500">
+                            Phục vụ mì ly, snack, nước ngọt và cà phê 24/7. Lò
+                            vi sóng và bình nước nóng lạnh luôn sẵn sàng.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="app-footer"></div>
+
+        <script src="/js/components.js"></script>
+        <script src="/js/main.js"></script>
+    </body>
+</html>

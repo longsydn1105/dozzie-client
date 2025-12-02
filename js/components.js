@@ -11,22 +11,11 @@ function renderNavbar() {
 
             <div class="hidden lg:flex items-center space-x-8">
 
-                <a href="#" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">About</a>
-
-                <div class="group relative">
-                    <button class="font-artusi flex items-center font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">
-                        Offers
-                        <svg class="ml-1 h-4 w-4 transform transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div class="absolute left-1/2 mt-2 w-48 origin-top -translate-x-1/2 scale-y-0 transform rounded-xl bg-white py-2 opacity-0 shadow-xl border border-gray-100 transition-all duration-300 ease-out group-hover:scale-y-100 group-hover:opacity-100">
-                        <a href="#" class="font-bogart block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#229ebd] font-bold">Ưu đãi hôm nay</a>
-                        <a href="#" class="font-bogart block px-6 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#229ebd] font-bold">Gói dài hạn</a>
-                    </div>
-                </div>
-
-                <a href="#" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Membership</a>
+                <a href="/about.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">About Us</a>
+                <a href="/features.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Feature</a>
+                <a href="/membership.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Membership</a>
                 <a href="/blog.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Blog</a>
-                <a href="/faq.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Q&A</a>
+                <a href="/faq.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">FAQ</a>
             </div>
 
             <div class="hidden lg:flex items-center space-x-4">
@@ -50,11 +39,11 @@ function renderNavbar() {
 
         <div id="mobile-menu" class="mt-2 hidden bg-white py-4 shadow-inner border-t border-gray-100 lg:hidden">
             <div class="flex flex-col space-y-2 px-6">
-                <a href="#" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">About</a>
-                <a href="#" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Offers</a>
-                <a href="#" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Membership</a>
+                <a href="/about.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">About Us</a>
+                <a href="/features.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Feature</a>
+                <a href="/membership.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Membership</a>
                 <a href="/blog.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Blog</a>
-                <a href="/faq.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Q&A</a>
+                <a href="/faq.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">FAQ</a>
                 <div class="h-px bg-gray-100 my-2"></div>
                 <a href="/login.html" class="font-artusi block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Log In</a>
                 <a href="/login.html?view=register" class="font-artusi block rounded-lg text-[#229ebd] py-2 font-black">Register Now</a>

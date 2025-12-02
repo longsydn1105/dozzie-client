@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Về Dozzie - Rest to Rise</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="./src/style.css" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;600;700&family=Prata&display=swap"
+            rel="stylesheet"
+        />
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            artusi: ['Prata', 'serif'],
+                            bogart: ['Fraunces', 'serif'],
+                        },
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="font-bogart bg-white text-gray-700 antialiased">
+        <div id="app-navbar" class="sticky top-0 z-50 w-full"></div>
+
+        <section
+            class="relative flex h-screen w-full items-center justify-center overflow-hidden"
+        >
+            <video
+                autoplay
+                loop
+        c        playsinline
+                class="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
+            >
+                <source src="./assets/imgs/about_us.mp4" type="video/mp4" />
+            </video>
+
+            <div class="absolute inset-0 z-10 bg-[#18233B]/60"></div>
+
+            <div class="relative z-20 container mx-auto px-4">
+                <div class="mx-auto max-w-5xl">
+                    <p
+                        class="font-bogart mb-8 text-sm tracking-widest text-white/70 uppercase md:text-base"
+                        data-aos="fade-down"
+                    >
+                        Khám phá câu chuyện của Dozzie
+                    </p>
+
+                    <div class="space-y-2">
+                        <a
+                            href="#our-story"
+                            class="group block flex cursor-pointer items-center gap-4 py-2 transition-all duration-500 hover:translate-x-4 md:gap-8 md:hover:translate-x-8"
+                        >
+                            <svg
+                                class="h-8 w-8 -translate-x-4 text-[#229ebd] opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100 md:h-12 md:w-12"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                ></path>
+                            </svg>
+                            <h1
+                                class="font-artusi text-5xl font-black text-white/50 transition-all duration-500 group-hover:scale-105 group-hover:text-white md:text-7xl lg:text-8xl"
+                            >
+                                Câu Chuyện
+                            </h1>
+                        </a>
+
+                        <a
+                            href="#core-values"
+                            class="group block flex cursor-pointer items-center gap-4 py-2 transition-all duration-500 hover:translate-x-4 md:gap-8 md:hover:translate-x-8"
+                        >
+                            <svg
+                                class="h-8 w-8 -translate-x-4 text-[#229ebd] opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100 md:h-12 md:w-12"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                ></path>
+                            </svg>
+                            <h1
+                                class="font-artusi text-5xl font-black text-white/50 transition-all duration-500 group-hover:scale-105 group-hover:text-white md:text-7xl lg:text-8xl"
+                            >
+                                Giá Trị Cốt Lõi
+                            </h1>
+                        </a>
+
+                        <a
+                            href="#experience"
+                            class="group block flex cursor-pointer items-center gap-4 py-2 transition-all duration-500 hover:translate-x-4 md:gap-8 md:hover:translate-x-8"
+                        >
+                            <svg
+                                class="h-8 w-8 -translate-x-4 text-[#229ebd] opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100 md:h-12 md:w-12"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                ></path>
+                            </svg>
+                            <h1
+                                class="font-artusi text-5xl font-black text-white/50 transition-all duration-500 group-hover:scale-105 group-hover:text-white md:text-7xl lg:text-8xl"
+                            >
+                                Trải Nghiệm
+                            </h1>
+                        </a>
+
+                        <a
+                            href="#careers"
+                            class="group block flex cursor-pointer items-center gap-4 py-2 transition-all duration-500 hover:translate-x-4 md:gap-8 md:hover:translate-x-8"
+                        >
+                            <svg
+                                class="h-8 w-8 -translate-x-4 text-[#229ebd] opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100 md:h-12 md:w-12"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                ></path>
+                            </svg>
+                            <h1
+                                class="font-artusi text-5xl font-black text-white/50 transition-all duration-500 group-hover:scale-105 group-hover:text-white md:text-7xl lg:text-8xl"
+                            >
+                                Tuyển Dụng
+                            </h1>
+                        </a>
+                    </div>
+
+                    <div
+                        class="absolute right-4 bottom-10 hidden animate-bounce text-white/70 md:right-20 md:block"
+                    >
+                        <p
+                            class="mb-2 origin-right translate-x-2 rotate-90 text-xs font-bold tracking-widest uppercase"
+                        >
+                            Scroll Down
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="our-story" class="bg-white py-20 text-center">
+            <div class="container mx-auto px-4">
+                <h2 class="font-artusi mb-6 text-4xl font-bold text-[#18233B]">
+                    Hành trình của sự nghỉ ngơi
+                </h2>
+                <p class="mx-auto max-w-2xl text-lg text-gray-500"></p>
+            </div>
+        </section>
+
+        <div id="app-footer"></div>
+
+        <script src="/js/components.js"></script>
+        <script src="/js/main.js"></script>
+
+        <script>
+            // Nếu ông muốn Navbar trong suốt lúc đầu cho đẹp thì thêm đoạn này
+            const navbar = document.querySelector('nav'); // Navbar được render từ components.js
+            // (Cần đợi component render xong mới chỉnh được, hoặc chỉnh trong components.js logic scroll)
+        </script>
+    </body>
+</html>
