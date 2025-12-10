@@ -86,7 +86,7 @@ function renderFooter() {
                         </div>
                         <div>
                             <p class="font-artusi text-xs font-bold uppercase tracking-wider text-gray-400">WhatsApp</p>
-                            <p class="font-bogart text-lg font-bold text-gray-800 transition hover:text-[#229ebd]">+84 909 090 909</p>
+                            <p class="font-bogart text-lg font-bold text-gray-800 transition hover:text-[#229ebd]">+84 387234792</p>
                         </div>
                     </div>
 
@@ -96,7 +96,7 @@ function renderFooter() {
                         </div>
                         <div>
                             <p class="font-artusi text-xs font-bold uppercase tracking-wider text-gray-400">Email</p>
-                            <p class="font-bogart text-lg font-bold text-gray-800 transition hover:text-[#229ebd]">help@dozzie.com</p>
+                            <p class="font-bogart text-lg font-bold text-gray-800 transition hover:text-[#229ebd]">DozzieCapsule@gmail.com</p>
                         </div>
                     </div>
 
@@ -145,8 +145,21 @@ function renderFooter() {
                         <li><a href="#" class="inline-block transition hover:translate-x-1 hover:text-[#229ebd]">Partnership</a></li>
                     </ul>
                 </div>
+                
             </div>
 
+            <div class="border-t border-gray-100 pt-8 mb-8">
+                <p class="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Chấp nhận thanh toán</p>
+                <div class="flex flex-wrap justify-center items-center gap-6 md:gap-8 opacity-60 hover:opacity-100 transition-opacity duration-300">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" class="h-6 md:h-8 object-contain grayscale hover:grayscale-0 transition-all">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" class="h-6 md:h-8 object-contain grayscale hover:grayscale-0 transition-all">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/JCB_logo.svg" alt="JCB" class="h-6 md:h-8 object-contain grayscale hover:grayscale-0 transition-all">
+                    <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="Momo" class="h-6 md:h-8 object-contain grayscale hover:grayscale-0 transition-all">
+                    <img src="https://vnpay.vn/assets/images/logo-icon/logo-primary.svg" alt="VNPay" class="h-5 md:h-6 object-contain grayscale hover:grayscale-0 transition-all">
+                    <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/02/Logo-Vietcombank.png" alt="Vietcombank" class="h-4 md:h-6 object-contain grayscale hover:grayscale-0 transition-all">
+                </div>
+            </div>
+            
             <div class="border-t border-gray-100 pt-8 text-center text-sm text-gray-400">
                 &copy; 2025 Dozzie Capsule Hotel. All rights reserved
             </div>
