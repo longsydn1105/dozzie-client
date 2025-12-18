@@ -9,7 +9,7 @@ function renderNavbar() {
                 <img src="./assets/imgs/logo_dozzie.png" alt="Dozzie Logo" class="h-8 group-hover:scale-105 transition-transform">
             </a>
 
-            <div class="hidden lg:flex items-center space-x-8">
+            <div class="hidden lg:flex items-center gap-8">
 
                 <a href="/about.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">About Us</a>
                 <a href="/features.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Feature</a>
