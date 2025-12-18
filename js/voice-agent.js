@@ -1,8 +1,8 @@
 import { Room, RoomEvent, Track, ConnectionState } from 'livekit-client';
 
 // Configuration - sử dụng biến môi trường từ Vite hoặc giá trị mặc định
-const AGENT_SERVER_URL = import.meta.env.VITE_AGENT_SERVER_URL || 'http://localhost:5001';
-const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || 'wss://demo-avatar-nas8r76a.livekit.cloud';
+const AGENT_SERVER_URL = 'https://18fc8d2b3f34.ngrok-free.app';
+const LIVEKIT_URL = 'wss://demo-avatar-nas8r76a.livekit.cloud';
 
 class VoiceAgent {
     constructor() {
@@ -10,6 +10,7 @@ class VoiceAgent {
         this.isConnected = false;
         this.isMuted = false;
         this.localAudioTrack = null;
+        this.widgetCreated = false;
 
         this.elements = {
             widget: null,
@@ -25,9 +26,52 @@ class VoiceAgent {
         this.init();
     }
 
+    isUserLoggedIn() {
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        return !!(token && user);
+    }
+
     init() {
-        this.createWidget();
-        this.bindEvents();
+        // Only show agent if user is logged in
+        if (this.isUserLoggedIn()) {
+            this.createWidget();
+            this.bindEvents();
+        }
+
+        // Listen for login/logout changes
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'token' || e.key === 'user') {
+                this.updateVisibility();
+            }
+        });
+
+        // Also check periodically for same-tab login/logout
+        setInterval(() => this.updateVisibility(), 1000);
+    }
+
+    updateVisibility() {
+        const isLoggedIn = this.isUserLoggedIn();
+
+        if (isLoggedIn && !this.widgetCreated) {
+            this.createWidget();
+            this.bindEvents();
+        } else if (!isLoggedIn && this.widgetCreated) {
+            this.destroyWidget();
+        }
+    }
+
+    destroyWidget() {
+        if (this.isConnected) {
+            this.disconnect();
+        }
+        if (this.elements.button) {
+            this.elements.button.remove();
+        }
+        if (this.elements.modal) {
+            this.elements.modal.remove();
+        }
+        this.widgetCreated = false;
     }
 
     createWidget() {
@@ -76,12 +120,14 @@ class VoiceAgent {
                 </div>
 
                 <div class="voice-agent-body">
-                    <div id="voice-agent-visualizer" class="voice-agent-visualizer">
-                        <div class="visualizer-bar"></div>
-                        <div class="visualizer-bar"></div>
-                        <div class="visualizer-bar"></div>
-                        <div class="visualizer-bar"></div>
-                        <div class="visualizer-bar"></div>
+                    <div id="voice-agent-video-container" class="voice-agent-video-container">
+                        <div id="voice-agent-visualizer" class="voice-agent-visualizer">
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                        </div>
                     </div>
 
                     <div id="voice-agent-transcript" class="voice-agent-transcript">
@@ -133,9 +179,12 @@ class VoiceAgent {
         this.elements.muteBtn = modal.querySelector('#voice-agent-mute');
         this.elements.closeBtn = modal.querySelector('#voice-agent-close');
         this.elements.visualizer = modal.querySelector('#voice-agent-visualizer');
+        this.elements.videoContainer = modal.querySelector('#voice-agent-video-container');
         this.elements.transcript = modal.querySelector('#voice-agent-transcript');
         this.elements.connectBtn = modal.querySelector('#voice-agent-connect');
         this.elements.disconnectBtn = modal.querySelector('#voice-agent-disconnect');
+
+        this.widgetCreated = true;
     }
 
     bindEvents() {
@@ -175,10 +224,39 @@ class VoiceAgent {
         });
     }
 
+    getUserInfo() {
+        try {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                return {
+                    name: user.displayName || user.name || '',
+                    email: user.email || ''
+                };
+            }
+        } catch (e) {
+            console.error('Error parsing user info:', e);
+        }
+        return { name: '', email: '' };
+    }
+
     async getToken() {
         try {
-            const userName = 'user-' + Math.random().toString(36).substring(7);
-            const response = await fetch(`${AGENT_SERVER_URL}/getToken?name=${encodeURIComponent(userName)}`);
+            const identity = 'user-' + Math.random().toString(36).substring(7);
+            const userInfo = this.getUserInfo();
+
+            // Build query params with user info
+            const params = new URLSearchParams({
+                name: identity,
+                userName: userInfo.name,
+                userEmail: userInfo.email
+            });
+
+            const response = await fetch(`${AGENT_SERVER_URL}/getToken?${params.toString()}`, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
             if (!response.ok) throw new Error('Failed to get token');
             return await response.text();
         } catch (error) {
@@ -228,11 +306,23 @@ class VoiceAgent {
                 const audioElement = track.attach();
                 audioElement.id = 'agent-audio';
                 document.body.appendChild(audioElement);
+            } else if (track.kind === Track.Kind.Video) {
+                // Handle video track from Tavus avatar
+                const videoElement = track.attach();
+                videoElement.id = 'agent-video';
+                videoElement.className = 'voice-agent-video';
+                this.elements.videoContainer.appendChild(videoElement);
+                // Hide visualizer when video is available
+                this.elements.visualizer.classList.add('hidden');
             }
         });
 
         this.room.on(RoomEvent.TrackUnsubscribed, (track) => {
-            track.detach();
+            track.detach().forEach(el => el.remove());
+            // Show visualizer again when video is removed
+            if (track.kind === Track.Kind.Video) {
+                this.elements.visualizer.classList.remove('hidden');
+            }
         });
 
         this.room.on(RoomEvent.Disconnected, () => {
@@ -277,6 +367,13 @@ class VoiceAgent {
         // Remove audio element
         const audioEl = document.getElementById('agent-audio');
         if (audioEl) audioEl.remove();
+
+        // Remove video element
+        const videoEl = document.getElementById('agent-video');
+        if (videoEl) videoEl.remove();
+
+        // Show visualizer again
+        this.elements.visualizer.classList.remove('hidden');
     }
 
     async disconnect() {
