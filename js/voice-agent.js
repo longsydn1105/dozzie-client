@@ -1,16 +1,15 @@
-import { Room, RoomEvent, Track, ConnectionState } from 'livekit-client';
+import Daily from '@daily-co/daily-js';
 
-// Configuration - sử dụng biến môi trường từ Vite hoặc giá trị mặc định
-const AGENT_SERVER_URL = 'https://18fc8d2b3f34.ngrok-free.app';
-const LIVEKIT_URL = 'wss://demo-avatar-nas8r76a.livekit.cloud';
+// Configuration
+const AGENT_SERVER_URL = 'http://localhost:5001';
 
 class VoiceAgent {
     constructor() {
-        this.room = null;
+        this.call = null;
         this.isConnected = false;
         this.isMuted = false;
-        this.localAudioTrack = null;
         this.widgetCreated = false;
+        this.conversationId = null;
 
         this.elements = {
             widget: null,
@@ -224,43 +223,19 @@ class VoiceAgent {
         });
     }
 
-    getUserInfo() {
+    async createConversation() {
         try {
-            const userStr = localStorage.getItem('user');
-            if (userStr) {
-                const user = JSON.parse(userStr);
-                return {
-                    name: user.displayName || user.name || '',
-                    email: user.email || ''
-                };
-            }
-        } catch (e) {
-            console.error('Error parsing user info:', e);
-        }
-        return { name: '', email: '' };
-    }
-
-    async getToken() {
-        try {
-            const identity = 'user-' + Math.random().toString(36).substring(7);
-            const userInfo = this.getUserInfo();
-
-            // Build query params with user info
-            const params = new URLSearchParams({
-                name: identity,
-                userName: userInfo.name,
-                userEmail: userInfo.email
-            });
-
-            const response = await fetch(`${AGENT_SERVER_URL}/getToken?${params.toString()}`, {
+            const response = await fetch(`${AGENT_SERVER_URL}/createConversation`, {
+                method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
                     'ngrok-skip-browser-warning': 'true'
                 }
             });
-            if (!response.ok) throw new Error('Failed to get token');
-            return await response.text();
+            if (!response.ok) throw new Error('Failed to create conversation');
+            return await response.json();
         } catch (error) {
-            console.error('Error getting token:', error);
+            console.error('Error creating conversation:', error);
             throw error;
         }
     }
@@ -269,24 +244,26 @@ class VoiceAgent {
         try {
             this.updateStatus('Đang kết nối...', 'connecting');
 
-            const token = await this.getToken();
+            // Create Tavus conversation
+            const conversationData = await this.createConversation();
+            this.conversationId = conversationData.conversation_id;
 
-            this.room = new Room({
-                audioCaptureDefaults: {
-                    autoGainControl: true,
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                },
+            console.log('Created conversation:', conversationData);
+
+            // Create Daily call frame
+            this.call = Daily.createCallObject({
+                audioSource: true,
+                videoSource: false,
+                dailyConfig: {
+                    experimentalChromeVideoMuteLightOff: true,
+                }
             });
 
             // Setup event handlers
-            this.setupRoomEvents();
+            this.setupCallEvents();
 
-            // Connect to room
-            await this.room.connect(LIVEKIT_URL, token);
-
-            // Enable microphone
-            await this.room.localParticipant.setMicrophoneEnabled(true);
+            // Join the conversation
+            await this.call.join({ url: conversationData.conversation_url });
 
             this.isConnected = true;
             this.updateStatus('Đang nói chuyện', 'connected');
@@ -300,67 +277,203 @@ class VoiceAgent {
         }
     }
 
-    setupRoomEvents() {
-        this.room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-            if (track.kind === Track.Kind.Audio) {
-                const audioElement = track.attach();
-                audioElement.id = 'agent-audio';
-                document.body.appendChild(audioElement);
-            } else if (track.kind === Track.Kind.Video) {
-                // Handle video track from Tavus avatar
-                const videoElement = track.attach();
+    setupCallEvents() {
+        // Handle participant joined (video track from Tavus)
+        this.call.on('participant-joined', (event) => {
+            console.log('Participant joined:', event.participant);
+        });
+
+        // Handle track started (audio/video from Tavus replica)
+        this.call.on('track-started', (event) => {
+            const { participant, track } = event;
+
+            // Only handle remote participants (the Tavus replica)
+            if (participant.local) return;
+
+            console.log('Track started:', track.kind, 'from', participant.user_id);
+
+            if (track.kind === 'video') {
+                // Create video element for the Tavus avatar
+                const videoElement = document.createElement('video');
                 videoElement.id = 'agent-video';
                 videoElement.className = 'voice-agent-video';
+                videoElement.srcObject = new MediaStream([track]);
+                videoElement.autoplay = true;
+                videoElement.playsInline = true;
+
+                // Remove existing video if any
+                const existingVideo = document.getElementById('agent-video');
+                if (existingVideo) existingVideo.remove();
+
                 this.elements.videoContainer.appendChild(videoElement);
-                // Hide visualizer when video is available
                 this.elements.visualizer.classList.add('hidden');
+            } else if (track.kind === 'audio') {
+                // Create audio element for the Tavus avatar voice
+                const audioElement = document.createElement('audio');
+                audioElement.id = 'agent-audio';
+                audioElement.srcObject = new MediaStream([track]);
+                audioElement.autoplay = true;
+
+                // Remove existing audio if any
+                const existingAudio = document.getElementById('agent-audio');
+                if (existingAudio) existingAudio.remove();
+
+                document.body.appendChild(audioElement);
             }
         });
 
-        this.room.on(RoomEvent.TrackUnsubscribed, (track) => {
-            track.detach().forEach(el => el.remove());
-            // Show visualizer again when video is removed
-            if (track.kind === Track.Kind.Video) {
+        // Handle track stopped
+        this.call.on('track-stopped', (event) => {
+            const { track, participant } = event;
+            if (participant.local) return;
+
+            if (track.kind === 'video') {
+                const videoEl = document.getElementById('agent-video');
+                if (videoEl) videoEl.remove();
                 this.elements.visualizer.classList.remove('hidden');
+            } else if (track.kind === 'audio') {
+                const audioEl = document.getElementById('agent-audio');
+                if (audioEl) audioEl.remove();
             }
         });
 
-        this.room.on(RoomEvent.Disconnected, () => {
+        // Handle app-message (tool calls from Tavus)
+        this.call.on('app-message', async (event) => {
+            console.log('Received app-message:', event);
+
+            const message = event.data;
+            const eventType = message.event_type || message.type;
+
+            // Handle tool call events - check multiple possible event types
+            if (eventType === 'conversation.tool_call'
+                || eventType === 'tool_call'
+                || message.tool_calls
+                || message.function) {
+                await this.handleToolCall(message);
+            }
+
+            // Handle utterance events (transcription)
+            if (eventType === 'conversation.utterance' || eventType === 'utterance') {
+                const role = message.properties?.role || message.role;
+                const text = message.properties?.text || message.text;
+                if (text) {
+                    this.addTranscript(role === 'user' ? 'user' : 'agent', text);
+                }
+            }
+        });
+
+        // Handle disconnection
+        this.call.on('left-meeting', () => {
             this.handleDisconnect();
         });
 
-        this.room.on(RoomEvent.ConnectionStateChanged, (state) => {
-            if (state === ConnectionState.Disconnected) {
-                this.handleDisconnect();
-            }
+        // Handle errors
+        this.call.on('error', (error) => {
+            console.error('Daily call error:', error);
+            this.updateStatus('Lỗi kết nối', 'error');
         });
+    }
 
-        // Handle transcription data
-        this.room.on(RoomEvent.DataReceived, (payload, participant) => {
-            try {
-                const data = JSON.parse(new TextDecoder().decode(payload));
-                if (data.type === 'transcription') {
-                    const sender = participant?.identity?.includes('agent') ? 'agent' : 'user';
-                    this.addTranscript(sender, data.text);
-                }
-            } catch (e) {
-                // Ignore non-JSON data
-            }
-        });
+    async handleToolCall(message) {
+        // Log full message to debug
+        console.log('Full tool call message:', JSON.stringify(message, null, 2));
 
-        // Listen for transcription events
-        this.room.on(RoomEvent.TranscriptionReceived, (segments, participant) => {
-            segments.forEach(segment => {
-                if (segment.final) {
-                    const isAgent = participant?.identity?.includes('agent') || !participant?.isLocal;
-                    this.addTranscript(isAgent ? 'agent' : 'user', segment.text);
-                }
-            });
-        });
+        // Try different possible paths for tool name and arguments
+        const toolName = message.properties?.tool_name
+            || message.properties?.name
+            || message.tool_name
+            || message.name
+            || message.function?.name;
+        const toolCallId = message.properties?.tool_call_id
+            || message.inference_id
+            || message.tool_call_id
+            || message.id;
+
+        let args = {};
+        const argsSource = message.properties?.arguments
+            || message.arguments
+            || message.function?.arguments
+            || message.properties;
+
+        try {
+            if (typeof argsSource === 'string') {
+                args = JSON.parse(argsSource);
+            } else if (typeof argsSource === 'object') {
+                args = argsSource;
+            }
+        } catch (e) {
+            console.error('Failed to parse tool arguments:', e);
+        }
+
+        console.log(`Tool call: ${toolName}`, args, `ID: ${toolCallId}`);
+
+        let result = '';
+
+        try {
+            if (toolName === 'check_available_rooms') {
+                const response = await fetch(`${AGENT_SERVER_URL}/api/tools/check_available_rooms`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date: args.date,
+                        start_time: args.start_time,
+                        duration_hours: args.duration_hours,
+                        gender: args.gender
+                    })
+                });
+                const data = await response.json();
+                result = data.result;
+                console.log("🚀 ~ VoiceAgent ~ handleToolCall ~ result:", result)
+            } else if (toolName === 'create_booking') {
+                const response = await fetch(`${AGENT_SERVER_URL}/api/tools/create_booking`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        room_ids: args.room_ids,
+                        date: args.date,
+                        start_time: args.start_time,
+                        duration_hours: args.duration_hours,
+                        customer_name: args.customer_name,
+                        email: args.email
+                    })
+                });
+                const data = await response.json();
+                result = data.result;
+                console.log("🚀 ~ VoiceAgent ~ handleToolCall ~ result:", result)
+            } else {
+                result = `Unknown tool: ${toolName}`;
+            }
+        } catch (error) {
+            console.error('Tool execution error:', error);
+            result = `Error executing tool: ${error.message}`;
+        }
+
+        // Send result back to Tavus
+        this.sendToolResult(toolCallId, result);
+    }
+
+    sendToolResult(toolCallId, result) {
+        // Use conversation.echo to send tool result back to Tavus
+        // Based on Tavus documentation: https://docs.tavus.io/sections/event-schemas/conversation-echo
+        const message = {
+            message_type: 'conversation',
+            event_type: 'conversation.echo',
+            conversation_id: this.conversationId,
+            properties: {
+                modality: 'text',
+                text: result,
+                inference_id: toolCallId,
+                done: true
+            }
+        };
+
+        console.log('Sending tool result via echo:', message);
+        this.call.sendAppMessage(message, '*');
     }
 
     handleDisconnect() {
         this.isConnected = false;
+        this.conversationId = null;
         this.updateStatus('Đã ngắt kết nối', 'disconnected');
         this.updateUI(false);
 
@@ -377,18 +490,32 @@ class VoiceAgent {
     }
 
     async disconnect() {
-        if (this.room) {
-            await this.room.disconnect();
-            this.room = null;
+        // End the Tavus conversation
+        if (this.conversationId) {
+            try {
+                await fetch(`${AGENT_SERVER_URL}/endConversation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conversation_id: this.conversationId })
+                });
+            } catch (e) {
+                console.error('Failed to end conversation:', e);
+            }
+        }
+
+        if (this.call) {
+            await this.call.leave();
+            await this.call.destroy();
+            this.call = null;
         }
         this.handleDisconnect();
     }
 
     toggleMute() {
-        if (!this.room) return;
+        if (!this.call) return;
 
         this.isMuted = !this.isMuted;
-        this.room.localParticipant.setMicrophoneEnabled(!this.isMuted);
+        this.call.setLocalAudio(!this.isMuted);
 
         const micOn = this.elements.muteBtn.querySelector('.mic-on');
         const micOff = this.elements.muteBtn.querySelector('.mic-off');
