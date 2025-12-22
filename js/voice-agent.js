@@ -19,8 +19,21 @@ class VoiceAgent {
             muteBtn: null,
             closeBtn: null,
             visualizer: null,
-            transcript: null
+            transcript: null,
+            // Booking form elements
+            bookingFormContainer: null,
+            bookingForm: null,
+            bookingRoomType: null,
+            bookingRoomId: null,
+            bookingDate: null,
+            bookingTime: null,
+            bookingDuration: null,
+            bookingName: null,
+            bookingEmail: null
         };
+
+        // Store pending tool call ID for booking form
+        this.pendingBookingToolCallId = null;
 
         this.init();
     }
@@ -134,6 +147,50 @@ class VoiceAgent {
                     </div>
                 </div>
 
+                <!-- Booking Confirmation Form (hidden by default) -->
+                <div id="booking-form-container" class="booking-form-container hidden">
+                    <div class="booking-form-modal">
+                        <div class="booking-form-header">
+                            <h4>Xác nhận đặt phòng</h4>
+                            <button id="booking-form-close" class="booking-form-close">&times;</button>
+                        </div>
+                        <form id="booking-form" class="booking-form">
+                            <input type="hidden" id="booking-room-type">
+                            <input type="hidden" id="booking-room-id">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="booking-date">Ngày</label>
+                                    <input type="date" id="booking-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="booking-time">Giờ vào</label>
+                                    <input type="time" id="booking-time" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-duration">Thời lượng</label>
+                                <select id="booking-duration" required>
+                                    <option value="3">3 giờ</option>
+                                    <option value="6">6 giờ</option>
+                                    <option value="8">8 giờ (Qua đêm)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-name">Họ tên</label>
+                                <input type="text" id="booking-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-email">Email</label>
+                                <input type="email" id="booking-email" required>
+                            </div>
+                            <div class="booking-form-actions">
+                                <button type="button" id="booking-form-cancel" class="btn-cancel">Hủy</button>
+                                <button type="submit" class="btn-confirm">Xác nhận</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="voice-agent-footer">
                     <button id="voice-agent-connect" class="voice-agent-connect-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -183,6 +240,17 @@ class VoiceAgent {
         this.elements.connectBtn = modal.querySelector('#voice-agent-connect');
         this.elements.disconnectBtn = modal.querySelector('#voice-agent-disconnect');
 
+        // Booking form elements
+        this.elements.bookingFormContainer = modal.querySelector('#booking-form-container');
+        this.elements.bookingForm = modal.querySelector('#booking-form');
+        this.elements.bookingRoomType = modal.querySelector('#booking-room-type');
+        this.elements.bookingRoomId = modal.querySelector('#booking-room-id');
+        this.elements.bookingDate = modal.querySelector('#booking-date');
+        this.elements.bookingTime = modal.querySelector('#booking-time');
+        this.elements.bookingDuration = modal.querySelector('#booking-duration');
+        this.elements.bookingName = modal.querySelector('#booking-name');
+        this.elements.bookingEmail = modal.querySelector('#booking-email');
+
         this.widgetCreated = true;
     }
 
@@ -220,6 +288,20 @@ class VoiceAgent {
             if (e.target === this.elements.modal) {
                 this.elements.modal.classList.add('hidden');
             }
+        });
+
+        // Booking form events
+        this.elements.bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.submitBookingForm();
+        });
+
+        modal.querySelector('#booking-form-close').addEventListener('click', () => {
+            this.hideBookingForm();
+        });
+
+        modal.querySelector('#booking-form-cancel').addEventListener('click', () => {
+            this.hideBookingForm();
         });
     }
 
@@ -440,6 +522,11 @@ class VoiceAgent {
                 const data = await response.json();
                 result = data.result;
                 console.log("🚀 ~ VoiceAgent ~ handleToolCall ~ result:", result)
+            } else if (toolName === 'show_booking_form') {
+                // Show booking form UI with pre-filled data
+                this.showBookingForm(args, toolCallId);
+                // Don't send result yet - will be sent after user confirms/cancels
+                return;
             } else {
                 result = `Unknown tool: ${toolName}`;
             }
@@ -564,6 +651,114 @@ class VoiceAgent {
 
         this.elements.transcript.appendChild(messageEl);
         this.elements.transcript.scrollTop = this.elements.transcript.scrollHeight;
+    }
+
+    showBookingForm(bookingData, toolCallId) {
+        console.log('Showing booking form with data:', bookingData);
+
+        // Store the tool call ID for later
+        this.pendingBookingToolCallId = toolCallId;
+
+        // Pre-fill the form with data from agent
+        if (bookingData.gender) {
+            this.elements.bookingRoomType.value = bookingData.gender.toLowerCase();
+        }
+        if (bookingData.room_id) {
+            this.elements.bookingRoomId.value = bookingData.room_id;
+        }
+        if (bookingData.date) {
+            this.elements.bookingDate.value = bookingData.date;
+        }
+        if (bookingData.start_time) {
+            this.elements.bookingTime.value = bookingData.start_time;
+        }
+        if (bookingData.duration_hours) {
+            this.elements.bookingDuration.value = bookingData.duration_hours.toString();
+        }
+        if (bookingData.customer_name) {
+            this.elements.bookingName.value = bookingData.customer_name;
+        }
+        if (bookingData.email) {
+            this.elements.bookingEmail.value = bookingData.email;
+        }
+
+        // Show the form
+        this.elements.bookingFormContainer.classList.remove('hidden');
+
+        // Add transcript message
+        this.addTranscript('system', 'Vui lòng xác nhận thông tin đặt phòng bên dưới.');
+    }
+
+    hideBookingForm() {
+        this.elements.bookingFormContainer.classList.add('hidden');
+
+        // If there's a pending tool call, send cancellation result
+        if (this.pendingBookingToolCallId) {
+            this.sendToolResult(this.pendingBookingToolCallId, 'User cancelled the booking form.');
+            this.pendingBookingToolCallId = null;
+        }
+    }
+
+    async submitBookingForm() {
+        const bookingData = {
+            room_ids: this.elements.bookingRoomId.value,
+            date: this.elements.bookingDate.value,
+            start_time: this.elements.bookingTime.value,
+            duration_hours: parseInt(this.elements.bookingDuration.value),
+            customer_name: this.elements.bookingName.value,
+            email: this.elements.bookingEmail.value
+        };
+
+        console.log('Submitting booking:', bookingData);
+
+        // Show loading state
+        const submitBtn = this.elements.bookingForm.querySelector('.btn-confirm');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Đang xử lý...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${AGENT_SERVER_URL}/api/tools/create_booking`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookingData)
+            });
+            const data = await response.json();
+            const result = data.result;
+
+            console.log('Booking result:', result);
+
+            // Send result back to agent
+            if (this.pendingBookingToolCallId) {
+                this.sendToolResult(this.pendingBookingToolCallId, result);
+                this.pendingBookingToolCallId = null;
+            }
+
+            // Hide the form
+            this.elements.bookingFormContainer.classList.add('hidden');
+
+            // Show success in transcript
+            if (result.includes('successful') || result.includes('thành công')) {
+                this.addTranscript('system', '✅ Đặt phòng thành công!');
+            } else {
+                this.addTranscript('system', '❌ ' + result);
+            }
+
+        } catch (error) {
+            console.error('Booking submission error:', error);
+
+            // Send error result back to agent
+            if (this.pendingBookingToolCallId) {
+                this.sendToolResult(this.pendingBookingToolCallId, `Error: ${error.message}`);
+                this.pendingBookingToolCallId = null;
+            }
+
+            this.addTranscript('system', '❌ Lỗi khi đặt phòng. Vui lòng thử lại.');
+        } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
     }
 }
 
