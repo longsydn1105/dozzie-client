@@ -1,7 +1,7 @@
 import Daily from '@daily-co/daily-js';
 
 // Configuration
-const AGENT_SERVER_URL = 'https://32953b78b4e4.ngrok-free.app';
+const AGENT_SERVER_URL = 'https://8bc5ef6a315c.ngrok-free.app';
 
 class VoiceAgent {
     constructor() {
