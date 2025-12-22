@@ -1,0 +1,530 @@
+/* Voice Agent Widget Styles */
+
+/* Floating Button */
+.voice-agent-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #229ebd 0%, #1a8bb0 100%);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 20px rgba(34, 158, 189, 0.4);
+    transition: all 0.3s ease;
+    z-index: 9998;
+}
+
+.voice-agent-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(34, 158, 189, 0.5);
+}
+
+.voice-agent-btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.voice-agent-btn svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Modal */
+.voice-agent-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(24, 35, 59, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.voice-agent-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.voice-agent-content {
+    background: #1a1a2e;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Header - Compact */
+.voice-agent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.voice-agent-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.voice-agent-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #229ebd 0%, #1a8bb0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.voice-agent-title h3 {
+    font-family: 'Prata', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    margin: 0;
+}
+
+.voice-agent-status {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.voice-agent-status.connecting {
+    color: #f59e0b;
+}
+
+.voice-agent-status.connected {
+    color: #22c55e;
+}
+
+.voice-agent-status.error {
+    color: #ef4444;
+}
+
+.voice-agent-status.disconnected {
+    color: #94a3b8;
+}
+
+.voice-agent-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    transition: all 0.2s ease;
+}
+
+.voice-agent-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+/* Body */
+.voice-agent-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Video Container - Large Avatar */
+.voice-agent-video-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.voice-agent-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Visualizer - Centered in video container */
+.voice-agent-visualizer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+}
+
+.voice-agent-visualizer.hidden {
+    display: none !important;
+}
+
+.visualizer-bar {
+    width: 8px;
+    height: 30px;
+    background: rgba(34, 158, 189, 0.3);
+    border-radius: 4px;
+    transition: all 0.1s ease;
+}
+
+.voice-agent-visualizer.active .visualizer-bar {
+    background: #229ebd;
+    animation: pulse 0.8s ease-in-out infinite;
+}
+
+.voice-agent-visualizer.active .visualizer-bar:nth-child(1) {
+    animation-delay: 0s;
+}
+.voice-agent-visualizer.active .visualizer-bar:nth-child(2) {
+    animation-delay: 0.1s;
+}
+.voice-agent-visualizer.active .visualizer-bar:nth-child(3) {
+    animation-delay: 0.2s;
+}
+.voice-agent-visualizer.active .visualizer-bar:nth-child(4) {
+    animation-delay: 0.3s;
+}
+.voice-agent-visualizer.active .visualizer-bar:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        height: 30px;
+    }
+    50% {
+        height: 60px;
+    }
+}
+
+/* Transcript - Hidden by default */
+.voice-agent-transcript {
+    display: none !important;
+}
+
+.transcript-placeholder,
+.transcript-message,
+.transcript-sender {
+    display: none !important;
+}
+
+/* Footer */
+.voice-agent-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.voice-agent-connect-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #229ebd 0%, #1a8bb0 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.voice-agent-connect-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(34, 158, 189, 0.4);
+}
+
+.voice-agent-mute-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #229ebd;
+    background: transparent;
+    color: #229ebd;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.voice-agent-mute-btn:hover {
+    background: rgba(34, 158, 189, 0.1);
+}
+
+.voice-agent-mute-btn.muted {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.voice-agent-disconnect-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.voice-agent-disconnect-btn:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+/* Utility - Scoped to voice agent only */
+.voice-agent-modal.hidden {
+    display: none !important;
+}
+
+.voice-agent-mute-btn.hidden,
+.voice-agent-connect-btn.hidden,
+.voice-agent-disconnect-btn.hidden,
+.mic-on.hidden,
+.mic-off.hidden {
+    display: none !important;
+}
+
+/* Booking Form */
+.booking-form-container {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.booking-form-container.hidden {
+    display: none !important;
+}
+
+.booking-form-modal {
+    background: #1a1a2e;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+.booking-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: rgba(34, 158, 189, 0.15);
+    border-bottom: 1px solid rgba(34, 158, 189, 0.2);
+}
+
+.booking-form-header h4 {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.booking-form-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.booking-form-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.booking-form {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #229ebd;
+    background: rgba(34, 158, 189, 0.1);
+}
+
+.form-group input[readonly] {
+    background: rgba(255, 255, 255, 0.02);
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: #1a1a2e;
+    color: white;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.booking-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.btn-confirm {
+    flex: 2;
+    padding: 10px;
+    background: linear-gradient(135deg, #229ebd 0%, #1a8bb0 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 158, 189, 0.4);
+}
+
+.btn-confirm:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .voice-agent-modal {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .voice-agent-content {
+        max-width: 100%;
+        border-radius: 24px 24px 0 0;
+        max-height: 90vh;
+    }
+
+    .voice-agent-video-container {
+        aspect-ratio: 4 / 5;
+    }
+
+    .voice-agent-btn {
+        bottom: 16px;
+        right: 16px;
+        width: 56px;
+        height: 56px;
+    }
+}
