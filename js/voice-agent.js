@@ -170,9 +170,9 @@ class VoiceAgent {
                             <div class="form-group">
                                 <label for="booking-duration">Thời lượng</label>
                                 <select id="booking-duration" required>
-                                    <option value="3">3 giờ</option>
-                                    <option value="6">6 giờ</option>
-                                    <option value="8">8 giờ (Qua đêm)</option>
+                                    <option value="3">3 giờ - 109,000 VND</option>
+                                    <option value="6">6 giờ - 159,000 VND</option>
+                                    <option value="12">12 giờ - 229,000 VND</option>
                                 </select>
                             </div>
                             <div class="form-group">
