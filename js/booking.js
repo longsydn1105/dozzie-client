@@ -537,7 +537,8 @@ async function handleMultiBookingSubmit(e) {
 
     try {
         const res = await fetch(
-            'https://dozzie-server.onrender.com/api/bookings',
+            //dozzie-server.onrender.com
+            'http://localhost:3000/api/bookings',
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

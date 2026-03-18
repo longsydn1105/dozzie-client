@@ -1,5 +1,7 @@
 // client/js/auth.js
 
+const { default: authApi } = require('../src/api/authApi');
+
 // --- 1. HIỆU ỨNG KHI VÀO TRANG (FADE IN) ---
 window.addEventListener('pageshow', (event) => {
     document.body.classList.add('loaded');
@@ -32,17 +34,19 @@ function switchToLogin() {
 async function handleRegister(event) {
     event.preventDefault();
 
-    const name = document.getElementById('reg-name').value;
+    // 1. Lấy dữ liệu (Sửa name thành fullName cho khớp Schema)
+    const fullName = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
     const password = document.getElementById('reg-password').value;
     const errorDisplay = document.getElementById('reg-error-message');
 
-    // Reset lỗi cũ
+    // Reset UI lỗi
     if (errorDisplay) {
         errorDisplay.textContent = '';
         errorDisplay.classList.remove('animate-pulse');
     }
 
+    // Validation nhẹ phía Client
     if (password.length < 6) {
         const msg = 'Mật khẩu yếu quá (tối thiểu 6 ký tự)!';
         if (errorDisplay) errorDisplay.textContent = msg;
@@ -51,54 +55,44 @@ async function handleRegister(event) {
     }
 
     try {
-        const res = await fetch(
-            'https://dozzie-server.onrender.com/api/auth/register',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ displayName: name, email, password }),
-            },
-        );
+        // 2. Gọi API (Axios sẽ tự lo JSON.stringify và Header)
+        // Nếu lỗi (4xx, 5xx), nó nhảy xuống block catch ngay lập tức
+        const response = await authApi.register({ fullName, email, password });
 
-        const result = await res.json();
+        // 3. XỬ LÝ THÀNH CÔNG (Chỉ chạy đến đây nếu status là 2xx)
+        console.log('Đăng ký ngon lành!', response.data);
 
-        // --- XỬ LÝ KHI LỖI (409, 400, 500...) ---
-        if (!res.ok) {
-            console.log('Server trả về lỗi:', result.message); // Check console xem nó in ra gì
+        alert('Đăng ký thành công! Mời đại ca đăng nhập ngay.');
 
-            if (errorDisplay) {
-                // Hiển thị lỗi lên màn hình cho khách đọc
-                errorDisplay.textContent =
-                    result.message || 'Đăng ký thất bại!';
-                errorDisplay.classList.add(
-                    'animate-pulse',
-                    'text-red-600',
-                    'font-bold',
-                );
-            } else {
-                // Fallback nếu không tìm thấy div lỗi
-                alert(result.message || 'Đăng ký thất bại!');
-            }
-            return; // Dừng lại, không chạy đoạn thành công
-        }
-
-        // --- THÀNH CÔNG ---
-        alert('Đăng ký thành công! Mời đại ca đăng nhập ngay.', () => {
+        // Chuyển tab sang Login
+        if (typeof switchToLogin === 'function') {
             switchToLogin();
+            // Đổ sẵn email vừa đăng ký vào ô login cho tiện
             const loginEmail = document.getElementById('login-email');
-            const loginPass = document.getElementById('login-password');
-            if (loginEmail) loginEmail.value = email;
-            if (loginPass) {
-                loginPass.value = '';
-                loginPass.focus();
+            if (loginEmail) {
+                loginEmail.value = email;
+                document.getElementById('login-password')?.focus();
             }
-        });
+        }
     } catch (err) {
-        console.error('Lỗi hệ thống:', err);
-        if (errorDisplay)
-            errorDisplay.textContent =
-                'Lỗi kết nối server (Check xem server bật chưa?)';
-        else alert('Lỗi kết nối server!');
+        // 4. XỬ LÝ LỖI (Tất cả lỗi 400, 409, 500... bơi hết vào đây)
+        console.error('Lỗi đăng ký:', err);
+
+        // Lấy message lỗi từ Server trả về (ví dụ: "Email đã tồn tại")
+        const serverMessage =
+            err.response?.data?.message ||
+            'Đăng ký thất bại, check lại server nhé!';
+
+        if (errorDisplay) {
+            errorDisplay.textContent = serverMessage;
+            errorDisplay.classList.add(
+                'animate-pulse',
+                'text-red-600',
+                'font-bold',
+            );
+        } else {
+            alert(serverMessage);
+        }
     }
 }
 
@@ -111,52 +105,40 @@ async function handleLogin(event) {
     const password = document.getElementById('login-password').value;
     const errorDisplay = document.getElementById('login-error-message');
 
+    // 1. Reset & Validate nhanh
     if (errorDisplay) errorDisplay.textContent = '';
 
     if (!email || !password) {
-        if (errorDisplay)
-            errorDisplay.textContent = 'Vui lòng nhập đủ thông tin!';
-        else alert('Vui lòng nhập đủ thông tin!');
+        const msg = 'Vui lòng nhập đủ thông tin!';
+        if (errorDisplay) errorDisplay.textContent = msg;
+        else alert(msg);
         return;
     }
 
     try {
-        const response = await fetch(
-            'https://dozzie-server.onrender.com/api/auth/login',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            },
-        );
+        // 2. Gọi API qua authApi (Axios)
+        const response = await authApi.login({ email, password });
 
-        const result = await response.json();
-
-        if (!response.ok) {
-            if (errorDisplay) errorDisplay.textContent = result.message;
-            else alert(result.message);
-            return;
-        }
-
+        // 3. Xử lý THÀNH CÔNG
+        const result = response.data;
         console.log('Login thành công!', result);
+
+        // Lưu vào máy khách
         localStorage.setItem('token', result.token);
         localStorage.setItem('user', JSON.stringify(result.user));
 
-        // --- CHUYỂN TRANG ---
-        alert('Đăng nhập thành công! Chào mừng trở lại.', () => {
-            console.log('Callback chuyển trang đang chạy...');
-            window.location.replace('/index.html');
-        });
-
-        // Fallback an toàn: Nếu sau 2s mà alert chưa chạy callback thì tự chuyển
-        setTimeout(() => {
-            if (window.location.pathname.includes('login.html')) {
-                window.location.href = '/index.html';
-            }
-        }, 2000);
+        // 4. Chuyển trang
+        alert('Đăng nhập thành công! Chào mừng trở lại.');
+        window.location.replace('/index.html');
     } catch (error) {
-        console.error(error);
-        alert('Lỗi kết nối server!');
+        console.error('Lỗi đăng nhập:', error);
+        const message = error.response?.data?.message || 'Lỗi kết nối server!';
+
+        if (errorDisplay) {
+            errorDisplay.textContent = message;
+        } else {
+            alert(message);
+        }
     }
 }
 
