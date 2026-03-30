@@ -10,9 +10,20 @@ export function renderSidebar(containerId) {
     // 2. Định nghĩa menu với các link chuẩn
     const menuItems = [
         { name: 'Tổng quan', path: 'dashboard.html', icon: '📊' },
+
+        // Nhóm 1: Quản lý Cốt lõi (Vận hành)
         { name: 'Quản lý Phòng', path: 'rooms.html', icon: '🛏️' },
+        { name: 'Gói dịch vụ', path: 'services.html', icon: '🏷️' },
+
+        // Nhóm 2: Quản lý Doanh thu & Giao dịch
         { name: 'Đơn đặt phòng', path: 'bookings.html', icon: '📅' },
         { name: 'Hóa đơn', path: 'invoices.html', icon: '💸' },
+
+        // Nhóm 3: Quản lý Khách hàng (CRM)
+        { name: 'Người dùng', path: 'users.html', icon: '👥' },
+        { name: 'Đánh giá', path: 'reviews.html', icon: '⭐' },
+
+        // Nhóm 4: Khẩn cấp (Luôn để cuối cùng)
         { name: 'Cứu hộ SOS', path: 'sos.html', icon: '🚨' },
     ];
 
