@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Quản Lý Hệ Thống Pod - Dozzie Admin</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="bg-gray-100 font-sans antialiased">
+        <div class="flex min-h-screen">
+            <div id="app-sidebar" class="hidden w-64 shrink-0 md:block"></div>
+
+            <main class="w-full flex-1 overflow-x-hidden bg-gray-100 p-10">
+                <div class="mx-auto max-w-360">
+                    <div class="mb-10 flex items-center justify-between">
+                        <h1 class="text-dozzie-navy text-3xl font-extrabold">
+                            Quản Lý Hệ Thống Pod
+                        </h1>
+                        <button
+                            id="btnAddRoom"
+                            class="bg-dozzie-blue hover:bg-dozzie-blue/80 rounded-xl px-6 py-3 font-bold text-white shadow-lg transition-all active:scale-95"
+                        >
+                            + Thêm Phòng Mới
+                        </button>
+                    </div>
+
+                    <div class="space-y-12">
+                        <div
+                            class="rounded-[2rem] border border-gray-200 bg-white p-8 shadow-sm"
+                        >
+                            <div
+                                class="bg-dozzie-navy mb-8 inline-block rounded-full px-6 py-2 text-sm font-bold tracking-widest text-white italic"
+                            >
+                                TẦNG 3 - KHU NAM (M)
+                            </div>
+                            <div
+                                id="male-rooms-grid"
+                                class="grid grid-cols-2 gap-6 md:grid-cols-4 xl:grid-cols-5"
+                            ></div>
+                        </div>
+
+                        <div
+                            class="rounded-[2rem] border border-gray-200 bg-white p-8 shadow-sm"
+                        >
+                            <div
+                                class="mb-8 inline-block rounded-full bg-pink-600 px-6 py-2 text-sm font-bold tracking-widest text-white italic"
+                            >
+                                TẦNG 2 - KHU NỮ (F)
+                            </div>
+                            <div
+                                id="female-rooms-grid"
+                                class="grid grid-cols-2 gap-6 md:grid-cols-4 xl:grid-cols-5"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div
+            id="addRoomModal"
+            class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-all"
+        ></div>
+
+        <script type="module">
+            import { renderSidebar } from '../js/components/AdminSidebar.js';
+            import '../js/room-manager.js';
+
+            // Lệnh vẽ sidebar ngay lập tức khi load HTML
+            renderSidebar('app-sidebar');
+        </script>
+    </body>
+</html>

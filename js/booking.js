@@ -1,10 +1,14 @@
 // client/js/booking.js
 
+import bookingApi from '../src/api/bookingApi';
+import roomApi from '../src/api/roomApi';
+import serviceApi from '../src/api/serviceApi';
+
 let requiredMale = 0;
 let requiredFemale = 0;
 let selectedRooms = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // 1. Hứng dữ liệu từ URL
     const urlParams = new URLSearchParams(window.location.search);
     const paramDate = urlParams.get('date');
@@ -14,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     requiredMale = parseInt(urlParams.get('male')) || 0;
     requiredFemale = parseInt(urlParams.get('female')) || 0;
     if (requiredMale === 0 && requiredFemale === 0) requiredMale = 1;
+
+    loadServicePackages();
 
     // --- MỚI: TỰ ĐỘNG ĐIỀN THÔNG TIN NGƯỜI DÙNG NẾU ĐÃ LOGIN ---
     const userStr = localStorage.getItem('user');
@@ -45,8 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('req-female').textContent = requiredFemale;
 
     // 3. Vẽ Bản Đồ
-    renderFloor('map-floor-male', 'M', 20);
-    renderFloor('map-floor-female', 'FM', 20);
+    await loadAndRenderRooms();
 
     // 4. Tính toán & Check phòng
     checkAvailabilityAndCalcTime();
@@ -492,18 +497,37 @@ function updateSelectionStatus() {
 function calculateEndTime() {
     const dateStr = document.getElementById('date-select').value;
     const timeStr = document.getElementById('start-time').value;
-    const duration = parseInt(
-        document.getElementById('duration-select').value || 3,
-    );
     const displayEl = document.getElementById('end-time-display');
     const hiddenInput = document.getElementById('hidden-end-date-iso');
 
+    // 1. Lấy thẻ select
+    const durationSelect = document.getElementById('duration-select');
+
+    // 2. Mặc định là 3 giờ (Phòng hờ trường hợp API chưa load xong data)
+    let duration = 3;
+
+    // 3. Tìm cái option đang được chọn và rút data-hours ra
+    if (durationSelect && durationSelect.selectedIndex >= 0) {
+        const selectedOption =
+            durationSelect.options[durationSelect.selectedIndex];
+        const hoursFromData = selectedOption.getAttribute('data-hours');
+
+        // Nếu có data-hours thì ép sang số nguyên
+        if (hoursFromData) {
+            duration = parseInt(hoursFromData, 10);
+        }
+    }
+
+    // Nếu chưa chọn ngày hoặc giờ thì không tính
     if (!dateStr || !timeStr) {
-        displayEl.textContent = '--:--';
+        if (displayEl) displayEl.textContent = '--:--';
         return;
     }
+
+    // Bắt đầu tính toán
     const startDate = new Date(`${dateStr}T${timeStr}:00`);
     const endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000);
+
     const timeFormat = endDate.toLocaleTimeString('vi-VN', {
         hour: '2-digit',
         minute: '2-digit',
@@ -512,54 +536,138 @@ function calculateEndTime() {
         day: '2-digit',
         month: '2-digit',
     });
-    displayEl.textContent = `${timeFormat} (${dateFormat})`;
-    hiddenInput.value = endDate.toISOString();
+
+    // Đẩy kết quả ra UI và Hidden Input
+    if (displayEl) displayEl.textContent = `${timeFormat} (${dateFormat})`;
+    if (hiddenInput) hiddenInput.value = endDate.toISOString();
 }
 
 // --- HÀM SUBMIT ---
 async function handleMultiBookingSubmit(e) {
     e.preventDefault();
-    // (Validation logic...)
+
+    if (!selectedRooms || selectedRooms.length === 0) {
+        alert('Đại ca chưa chọn phòng nào kìa, pick ít nhất 1 phòng đi!');
+        return;
+    }
 
     const dateStr = document.getElementById('date-select').value;
     const startTimeStr = document.getElementById('start-time').value;
-    const startFull = new Date(`${dateStr}T${startTimeStr}:00`);
-    const endTimeISO = document.getElementById('hidden-end-date-iso').value;
+    const packageId = document.getElementById('duration-select').value;
 
-    const bookingPayload = {
-        roomIds: selectedRooms,
-        startTime: startFull.toISOString(),
-        endTime: endTimeISO,
-        name: document.getElementById('guest-name').value,
-        phone: document.getElementById('guest-phone').value,
-        email: document.getElementById('guest-email').value,
-    };
+    if (!dateStr || !startTimeStr || !packageId) {
+        alert('Vui lòng điền đủ thông tin ngày, giờ và gói dịch vụ nhé.');
+        return;
+    }
+
+    const startFull = new Date(`${dateStr}T${startTimeStr}:00`);
 
     try {
-        const res = await fetch(
-            //dozzie-server.onrender.com
-            'http://localhost:3000/api/bookings',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookingPayload),
-            },
-        );
-        const result = await res.json();
-        if (!res.ok) {
-            alert(`Thất bại: ${result.message}`);
+        // Tạo mảng các request dùng bookingApi cực kỳ sạch sẽ
+        const bookingPromises = selectedRooms.map((roomId) => {
+            const payload = {
+                roomId: roomId,
+                packageId: packageId,
+                startTime: startFull.toISOString(),
+            };
+
+            // Gọi API, nếu thành công trả về success: true, lỗi trả về success: false kèm nội dung
+            return bookingApi
+                .createBooking(payload)
+                .then((res) => ({ success: true, room: roomId, data: res }))
+                .catch((err) => ({
+                    success: false,
+                    room: roomId,
+                    message: err.response?.data?.message || 'Lỗi server',
+                }));
+        });
+
+        // Bắn đồng loạt các request lên Server
+        const results = await Promise.all(bookingPromises);
+
+        // Lọc ra những phòng bị lỗi (ví dụ: trùng giờ, lỗi server)
+        const failedBookings = results.filter((res) => !res.success);
+
+        if (failedBookings.length > 0) {
+            // Gom thông báo lỗi lại
+            const errorMessages = failedBookings
+                .map((f) => `Phòng ${f.room}: ${f.message}`)
+                .join('\n');
+            alert(`Có lỗi xảy ra với một số phòng:\n${errorMessages}`);
         } else {
-            // ⭐️ CHUYỂN TRANG TẠI ĐÂY ⭐️
+            // Thành công 100%
             alert(
-                `Đặt thành công ${selectedRooms.length} phòng! Kiểm tra email nhé.`,
-                () => {
-                    console.log('Callback đang chạy...');
-                    window.location.href = '/index.html'; // Chuyển về trang chủ
-                },
+                `Ngon lành! Đã chốt ${selectedRooms.length} phòng. Check email lấy mã mở cửa nhé.`,
             );
+            window.location.href = '/index.html'; // Đá về trang chủ
         }
     } catch (err) {
-        console.error(err);
-        alert('Lỗi kết nối server!');
+        console.error('Lỗi đặt phòng hệ thống:', err);
+        alert('Lỗi ứng dụng! Không thể thực hiện đặt phòng lúc này.');
+    }
+}
+
+async function loadAndRenderRooms() {
+    try {
+        // 1. Gọi API lấy danh sách phòng thật từ DB
+        const response = await roomApi.getAllRooms();
+        const rooms = response.data?.data || [];
+
+        // 2. Lọc ra mảng phòng Nam và Nữ
+        const maleRooms = rooms.filter((r) => r.gender === 'Nam');
+        const femaleRooms = rooms.filter((r) => r.gender === 'Nữ');
+
+        // 3. Vẽ dựa trên số lượng thật (rooms.length)
+        renderFloor('map-floor-male', 'M', maleRooms.length);
+        renderFloor('map-floor-female', 'FM', femaleRooms.length);
+
+        // Sau khi vẽ xong thì mới check xem phòng nào bận để tô màu
+        checkAvailabilityAndCalcTime();
+    } catch (err) {
+        console.error('Lỗi load phòng thực tế:', err);
+    }
+}
+
+async function loadServicePackages() {
+    const selectEl = document.getElementById('duration-select');
+    if (!selectEl) return;
+
+    try {
+        selectEl.innerHTML =
+            '<option value="">Đang tải gói dịch vụ...</option>';
+        selectEl.disabled = true;
+
+        // 2. Gọi API lấy data
+        const response = await serviceApi.getAllPackages();
+        const packages = response.data?.data || response.data || [];
+
+        // 3. Lọc ra các gói đang bật (isActive === true)
+        const activePackages = packages.filter((pkg) => pkg.isActive);
+
+        if (activePackages.length === 0) {
+            selectEl.innerHTML =
+                '<option value="">Không có gói nào khả dụng</option>';
+            return;
+        }
+
+        // 4. Render data ra các thẻ <option>
+        selectEl.innerHTML = activePackages
+            .map((pkg) => {
+                // Format giá tiền cho đẹp (VD: 100000 -> 100.000)
+                const formattedPrice = pkg.price.toLocaleString('vi-VN');
+
+                // value là _id để lúc submit form mình gửi cái này lên Server
+                return `
+                <option value="${pkg._id}" data-hours="${pkg.hours}" data-price="${pkg.price}">
+                    ${pkg.name} - ${pkg.hours} Tiếng (${formattedPrice}đ)
+                </option>
+            `;
+            })
+            .join('');
+    } catch (error) {
+        console.error('Lỗi khi tải danh sách gói dịch vụ:', error);
+        selectEl.innerHTML = '<option value="">Lỗi tải dữ liệu!</option>';
+    } finally {
+        selectEl.disabled = false;
     }
 }

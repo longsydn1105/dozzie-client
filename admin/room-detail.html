@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quản lý chi tiết phòng | Dozzie</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-gray-50 antialiased">
+        <main class="min-h-screen p-8">
+            <div class="mx-auto max-w-4xl">
+                <div class="mb-6 flex items-center justify-between">
+                    <button
+                        onclick="history.back()"
+                        class="flex items-center font-bold text-gray-500 transition-all hover:text-[#229ebd]"
+                    >
+                        ← Quay lại danh sách
+                    </button>
+                    <div
+                        id="det-online"
+                        class="flex items-center gap-2 text-[10px] font-black uppercase"
+                    ></div>
+                </div>
+
+                <form
+                    id="formUpdateRoom"
+                    class="overflow-hidden rounded-[2.5rem] border border-gray-100 bg-white shadow-xl"
+                >
+                    <div class="bg-[#18233B] p-8 text-white">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <label
+                                    class="mb-1 block text-[10px] font-black uppercase opacity-50"
+                                    >Tên hiển thị (Label)</label
+                                >
+                                <input
+                                    type="text"
+                                    id="in-label"
+                                    name="label"
+                                    class="text-3 haste-none w-full border-b border-white/20 bg-transparent pb-1 text-3xl font-bold uppercase outline-none focus:border-white"
+                                />
+                            </div>
+                            <div class="text-right">
+                                <label
+                                    class="mb-1 block text-[10px] font-black uppercase opacity-50"
+                                    >Mã định danh (ID)</label
+                                >
+                                <input
+                                    type="text"
+                                    id="in-id"
+                                    name="_id"
+                                    readonly
+                                    class="cursor-not-allowed bg-transparent text-right font-mono text-sm opacity-80 outline-none"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-10 p-10 md:grid-cols-2">
+                        <div class="space-y-6">
+                            <h3
+                                class="border-b pb-4 text-xs font-black tracking-widest text-gray-400 uppercase"
+                            >
+                                Thông tin cơ bản
+                            </h3>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        class="mb-1 block text-[10px] font-bold text-gray-400 uppercase"
+                                        >Khu vực</label
+                                    >
+                                    <select
+                                        id="in-gender"
+                                        name="gender"
+                                        class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 font-bold text-gray-800 outline-none focus:border-[#229ebd]"
+                                    >
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label
+                                        class="mb-1 block text-[10px] font-bold text-gray-400 uppercase"
+                                        >Tầng</label
+                                    >
+                                    <input
+                                        type="number"
+                                        id="in-floor"
+                                        name="floor"
+                                        class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 font-bold text-gray-800 outline-none focus:border-[#229ebd]"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="mb-1 block text-[10px] font-bold text-gray-400 uppercase"
+                                    >Trạng thái phòng</label
+                                >
+                                <select
+                                    id="in-status"
+                                    name="status"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 font-bold text-gray-800 outline-none focus:border-[#229ebd]"
+                                >
+                                    <option value="available">
+                                        Sẵn sàng (Available)
+                                    </option>
+                                    <option value="occupied">
+                                        Đang bận (Booked)
+                                    </option>
+                                    <option value="cleaning">
+                                        Đang dọn dẹp (Cleaning)
+                                    </option>
+                                    <option value="maintenance">
+                                        Bảo trì (Maintenance)
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div
+                            class="space-y-5 rounded-[2rem] border border-gray-100 bg-gray-50 p-8"
+                        >
+                            <h3
+                                class="text-xs font-black tracking-widest text-gray-400 uppercase"
+                            >
+                                Cấu hình IoT nâng cao
+                            </h3>
+
+                            <div>
+                                <label
+                                    class="mb-1 block text-[10px] font-bold text-gray-400 uppercase"
+                                    >Device ID</label
+                                >
+                                <input
+                                    type="text"
+                                    id="in-deviceId"
+                                    name="iotConfig.deviceId"
+                                    class="w-full rounded-xl border border-gray-200 bg-white p-3 font-mono text-xs font-bold text-[#229ebd] outline-none focus:border-[#229ebd]"
+                                />
+                            </div>
+
+                            <div>
+                                <label
+                                    class="mb-1 block text-[10px] font-bold text-gray-400 uppercase"
+                                    >Topic Door</label
+                                >
+                                <input
+                                    type="text"
+                                    id="in-topicDoor"
+                                    name="iotConfig.topicDoor"
+                                    class="w-full rounded-xl border border-gray-200 bg-white p-3 font-mono text-[10px] text-gray-600 outline-none focus:border-[#229ebd]"
+                                />
+                            </div>
+
+                            <div>
+                                <label
+                                    class="mb-1 block text-[10px] font-bold text-gray-400 uppercase"
+                                    >Topic Power</label
+                                >
+                                <input
+                                    type="text"
+                                    id="in-topicPower"
+                                    name="iotConfig.topicPower"
+                                    class="w-full rounded-xl border border-gray-200 bg-white p-3 font-mono text-[10px] text-gray-600 outline-none focus:border-[#229ebd]"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex items-center justify-between border-t border-gray-100 bg-gray-50 p-8"
+                    >
+                        <button
+                            type="button"
+                            id="btnDeleteRoom"
+                            class="flex items-center gap-2 text-sm font-bold text-red-500 transition-all hover:text-red-700"
+                        >
+                            <svg
+                                class="h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            XÓA PHÒNG NÀY
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="rounded-2xl bg-[#229ebd] px-10 py-4 font-bold text-white shadow-lg shadow-[#229ebd]/20 transition-all hover:bg-[#1a8bb0] active:scale-95"
+                        >
+                            LƯU THAY ĐỔI
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <script type="module" src="../js/room-manager.js"></script>
+    </body>
+</html>

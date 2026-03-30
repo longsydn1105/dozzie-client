@@ -1,6 +1,20 @@
 // client/js/auth.js
 
-const { default: authApi } = require('../src/api/authApi');
+import { default as authApi } from '../src/api/authApi';
+
+(function () {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+
+    // Nếu đã có token (đã đăng nhập)
+    if (token && user) {
+        if (user.role === 'admin') {
+            window.location.href = '/admin/dashboard.html';
+        } else {
+            window.location.href = '/index.html';
+        }
+    }
+})();
 
 // --- 1. HIỆU ỨNG KHI VÀO TRANG (FADE IN) ---
 window.addEventListener('pageshow', (event) => {
@@ -62,7 +76,7 @@ async function handleRegister(event) {
         // 3. XỬ LÝ THÀNH CÔNG (Chỉ chạy đến đây nếu status là 2xx)
         console.log('Đăng ký ngon lành!', response.data);
 
-        alert('Đăng ký thành công! Mời đại ca đăng nhập ngay.');
+        alert('Đăng ký thành công! Mời bạn đăng nhập.');
 
         // Chuyển tab sang Login
         if (typeof switchToLogin === 'function') {
@@ -74,24 +88,17 @@ async function handleRegister(event) {
                 document.getElementById('login-password')?.focus();
             }
         }
-    } catch (err) {
+    } catch (error) {
         // 4. XỬ LÝ LỖI (Tất cả lỗi 400, 409, 500... bơi hết vào đây)
         console.error('Lỗi đăng ký:', err);
 
         // Lấy message lỗi từ Server trả về (ví dụ: "Email đã tồn tại")
-        const serverMessage =
-            err.response?.data?.message ||
-            'Đăng ký thất bại, check lại server nhé!';
-
+        const serverMsg = error.response?.data?.message || 'Lỗi kết nối!';
         if (errorDisplay) {
-            errorDisplay.textContent = serverMessage;
-            errorDisplay.classList.add(
-                'animate-pulse',
-                'text-red-600',
-                'font-bold',
-            );
+            errorDisplay.textContent = serverMsg;
+            errorDisplay.style.color = 'red';
         } else {
-            alert(serverMessage);
+            alert(serverMsg);
         }
     }
 }
@@ -119,17 +126,22 @@ async function handleLogin(event) {
         // 2. Gọi API qua authApi (Axios)
         const response = await authApi.login({ email, password });
 
-        // 3. Xử lý THÀNH CÔNG
-        const result = response.data;
-        console.log('Login thành công!', result);
+        const { success, token, user, message } = response.data;
 
-        // Lưu vào máy khách
-        localStorage.setItem('token', result.token);
-        localStorage.setItem('user', JSON.stringify(result.user));
+        if (success) {
+            // Lưu "vé" vào bộ nhớ trình duyệt
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
 
-        // 4. Chuyển trang
-        alert('Đăng nhập thành công! Chào mừng trở lại.');
-        window.location.replace('/index.html');
+            alert('Đăng nhập thành công!');
+
+            // 2. Kiểm tra Role để điều hướng
+            if (user.role === 'admin') {
+                window.location.href = '/admin/dashboard.html';
+            } else {
+                window.location.href = '/index.html';
+            }
+        }
     } catch (error) {
         console.error('Lỗi đăng nhập:', error);
         const message = error.response?.data?.message || 'Lỗi kết nối server!';
