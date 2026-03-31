@@ -388,6 +388,27 @@ function renderFloor(containerId, prefix, totalRooms) {
     }
 }
 
+async function loadAndRenderRooms() {
+    try {
+        // 1. Gọi API lấy danh sách phòng thật từ DB
+        const response = await roomApi.getAllRooms();
+        const rooms = response.data?.data || [];
+
+        // 2. Lọc ra mảng phòng Nam và Nữ
+        const maleRooms = rooms.filter((r) => r.gender === 'Nam');
+        const femaleRooms = rooms.filter((r) => r.gender === 'Nữ');
+
+        // 3. Vẽ dựa trên số lượng thật (rooms.length)
+        renderFloor('map-floor-male', 'M', maleRooms.length);
+        renderFloor('map-floor-female', 'FM', femaleRooms.length);
+
+        // Sau khi vẽ xong thì mới check xem phòng nào bận để tô màu
+        checkAvailabilityAndCalcTime();
+    } catch (err) {
+        console.error('Lỗi load phòng thực tế:', err);
+    }
+}
+
 // --- HÀM CHỌN PHÒNG ---
 window.toggleRoomSelection = function (element) {
     if (element.classList.contains('booked-pod')) {
@@ -604,27 +625,6 @@ async function handleMultiBookingSubmit(e) {
     } catch (err) {
         console.error('Lỗi đặt phòng hệ thống:', err);
         alert('Lỗi ứng dụng! Không thể thực hiện đặt phòng lúc này.');
-    }
-}
-
-async function loadAndRenderRooms() {
-    try {
-        // 1. Gọi API lấy danh sách phòng thật từ DB
-        const response = await roomApi.getAllRooms();
-        const rooms = response.data?.data || [];
-
-        // 2. Lọc ra mảng phòng Nam và Nữ
-        const maleRooms = rooms.filter((r) => r.gender === 'Nam');
-        const femaleRooms = rooms.filter((r) => r.gender === 'Nữ');
-
-        // 3. Vẽ dựa trên số lượng thật (rooms.length)
-        renderFloor('map-floor-male', 'M', maleRooms.length);
-        renderFloor('map-floor-female', 'FM', femaleRooms.length);
-
-        // Sau khi vẽ xong thì mới check xem phòng nào bận để tô màu
-        checkAvailabilityAndCalcTime();
-    } catch (err) {
-        console.error('Lỗi load phòng thực tế:', err);
     }
 }
 
