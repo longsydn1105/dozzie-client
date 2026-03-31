@@ -34,3 +34,5 @@ const userApi = {
      */
     deleteUser: (id) => axiosClient.delete(`/users/${id}`),
 };
+
+export default userApi;

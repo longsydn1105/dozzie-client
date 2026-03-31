@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quản Lý Người Dùng - Dozzie Admin</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+        <script src="../js/admin-guard.js"></script>
+    </head>
+    <body class="bg-gray-100 font-sans antialiased">
+        <div class="flex min-h-screen">
+            <div id="app-sidebar" class="hidden w-64 shrink-0 md:block"></div>
+
+            <main class="w-full flex-1 overflow-x-hidden bg-gray-100 p-10">
+                <div class="mx-auto max-w-360">
+                    <div class="mb-10 flex items-center justify-between">
+                        <div>
+                            <h1
+                                class="text-dozzie-navy mb-2 text-3xl font-extrabold"
+                            >
+                                Quản Lý Người Dùng
+                            </h1>
+                            <p class="font-medium text-gray-500">
+                                Theo dõi và quản lý tài khoản khách hàng, admin
+                                hệ thống.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+                    >
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse text-left">
+                                <thead>
+                                    <tr
+                                        class="border-b border-gray-200 bg-gray-50 text-sm tracking-wider text-gray-500 uppercase"
+                                    >
+                                        <th class="p-4 font-bold">STT</th>
+                                        <th class="p-4 font-bold">
+                                            Khách hàng
+                                        </th>
+                                        <th class="p-4 font-bold">
+                                            Số điện thoại
+                                        </th>
+                                        <th class="p-4 font-bold">Vai trò</th>
+                                        <th class="p-4 font-bold">
+                                            Trạng thái
+                                        </th>
+                                        <th class="p-4 font-bold">
+                                            Ngày tham gia
+                                        </th>
+                                        <th class="p-4 text-center font-bold">
+                                            Hành động
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    id="users-tbody"
+                                    class="divide-y divide-gray-100"
+                                >
+                                    <tr>
+                                        <td
+                                            colspan="7"
+                                            class="p-8 text-center font-medium text-gray-400"
+                                        >
+                                            Đang tải dữ liệu tài khoản...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <div
+            id="editUserModal"
+            class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-all"
+        >
+            <div
+                class="w-full max-w-md scale-95 rounded-[2.5rem] bg-white p-8 shadow-2xl transition-all duration-300"
+                id="modalContent"
+            >
+                <div class="mb-6 flex items-center justify-between">
+                    <h2 class="text-dozzie-navy text-2xl font-bold">
+                        Chỉnh sửa Tài khoản
+                    </h2>
+                    <button
+                        onclick="closeModal()"
+                        class="text-gray-400 transition hover:text-red-500"
+                    >
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="formEditUser" class="space-y-5">
+                    <input type="hidden" id="edit-userId" />
+                    <div>
+                        <label
+                            class="mb-1 block text-[10px] font-bold tracking-wider text-gray-400 uppercase"
+                            >Họ và Tên</label
+                        >
+                        <input
+                            type="text"
+                            id="edit-fullName"
+                            required
+                            class="focus:border-dozzie-blue focus:ring-dozzie-blue w-full rounded-xl border border-gray-200 bg-gray-50 p-3 font-bold outline-none focus:ring-1"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            class="mb-1 block text-[10px] font-bold tracking-wider text-gray-400 uppercase"
+                            >Số điện thoại</label
+                        >
+                        <input
+                            type="text"
+                            id="edit-phone"
+                            class="focus:border-dozzie-blue focus:ring-dozzie-blue w-full rounded-xl border border-gray-200 bg-gray-50 p-3 font-bold outline-none focus:ring-1"
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label
+                                class="mb-1 block text-[10px] font-bold tracking-wider text-gray-400 uppercase"
+                                >Vai trò</label
+                            >
+                            <select
+                                id="edit-role"
+                                class="focus:border-dozzie-blue w-full rounded-xl border border-gray-200 bg-gray-50 p-3 font-bold text-gray-700 outline-none"
+                            >
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                class="mb-1 block text-[10px] font-bold tracking-wider text-gray-400 uppercase"
+                                >Trạng thái</label
+                            >
+                            <select
+                                id="edit-status"
+                                class="focus:border-dozzie-blue w-full rounded-xl border border-gray-200 bg-gray-50 p-3 font-bold text-gray-700 outline-none"
+                            >
+                                <option value="active">Hoạt động</option>
+                                <option value="banned">Khóa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="bg-dozzie-blue shadow-dozzie-blue/30 mt-6 w-full rounded-xl py-4 text-sm font-bold tracking-widest text-white uppercase shadow-lg transition-all hover:bg-[#1a8bb0] active:scale-95"
+                    >
+                        Lưu Thay Đổi
+                    </button>
+                </form>
+            </div>
+        </div>
+        <script type="module">
+            import { renderSidebar } from '../js/components/AdminSidebar.js';
+            import '../js/users.js';
+
+            renderSidebar('app-sidebar');
+        </script>
+    </body>
+</html>
