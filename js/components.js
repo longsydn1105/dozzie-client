@@ -1,6 +1,32 @@
 // client/js/components.js
 
 function renderNavbar() {
+    // 1. Kiểm tra Token và bóc tách Role (Giải mã JWT tàng hình)
+    const token = localStorage.getItem('token');
+    let isAdmin = false;
+
+    if (token) {
+        try {
+            // Cắt lấy phần Payload (phần thứ 2 của Token) và giải mã
+            const payloadBase64 = token.split('.')[1];
+            // Decode Base64 thành chuỗi JSON, rồi parse ra Object
+            const decodedPayload = JSON.parse(atob(payloadBase64));
+
+            // Kiểm tra xem có phải chúa tể (admin) không
+            if (decodedPayload.role === 'admin') {
+                isAdmin = true;
+            }
+        } catch (error) {
+            console.error('Lỗi giải mã token ở Navbar:', error);
+        }
+    }
+
+    // 2. Tạo cục HTML cho nút Dashboard (Nếu là admin thì có code, không thì rỗng)
+    const adminDashboardBtn = isAdmin
+        ? `<a href="/admin/dashboard.html" class="font-artusi rounded-full bg-[#229ebd] text-white px-5 py-2 font-bold hover:bg-[#1a8bb0] shadow-md hover:-translate-y-0.5 transition-all duration-300">Dashboard</a>`
+        : ''; 
+
+    // 3. Chuỗi HTML Navbar
     const navbarHTML = `
     <nav class="bg-white shadow-md py-4 sticky top-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-4 flex justify-between items-center relative">
@@ -10,7 +36,6 @@ function renderNavbar() {
             </a>
 
             <div class="hidden lg:flex items-center gap-8">
-
                 <a href="/about.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">About Us</a>
                 <a href="/features.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Feature</a>
                 <a href="/membership.html" class="font-artusi font-medium text-gray-700 transition duration-200 hover:text-[#229ebd]">Membership</a>
@@ -26,6 +51,9 @@ function renderNavbar() {
 
                 <div id="user-actions" class="hidden flex items-center space-x-4">
                     <span id="user-name-display" class="font-bogart font-bold text-gray-800">Xin chào,</span>
+                    
+                    ${adminDashboardBtn} 
+                    
                     <button id="logout-btn" class="font-artusi rounded-full bg-gray-100 text-gray-600 px-5 py-2 font-bold hover:bg-red-500 hover:text-white transition duration-300">Logout</button>
                 </div>
             </div>
@@ -45,6 +73,9 @@ function renderNavbar() {
                 <a href="/blog.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Blog</a>
                 <a href="/faq.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">FAQ</a>
                 <div class="h-px bg-gray-100 my-2"></div>
+                
+                ${isAdmin ? `<a href="/admin/dashboard.html" class="font-artusi block py-3 font-bold text-[#229ebd]">Dashboard Admin</a>` : ''}
+                
                 <a href="/login.html" class="font-artusi block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Log In</a>
                 <a href="/login.html?view=register" class="font-artusi block rounded-lg text-[#229ebd] py-2 font-black">Register Now</a>
             </div>
