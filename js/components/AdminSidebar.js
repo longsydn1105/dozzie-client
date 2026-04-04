@@ -13,7 +13,7 @@ export function renderSidebar(containerId) {
 
         // Nhóm 1: Quản lý Cốt lõi (Vận hành)
         { name: 'Quản lý Phòng', path: 'rooms.html', icon: '🛏️' },
-        { name: 'Gói dịch vụ', path: 'services.html', icon: '🏷️' },
+        { name: 'Gói dịch vụ', path: 'servicepackage.html', icon: '🏷️' },
 
         // Nhóm 2: Quản lý Doanh thu & Giao dịch
         { name: 'Đơn đặt phòng', path: 'bookings.html', icon: '📅' },

@@ -1,30 +1,35 @@
 // client/js/components.js
 
 function renderNavbar() {
-    // 1. Kiểm tra Token và bóc tách Role (Giải mã JWT tàng hình)
+    // 1. Kiểm tra Token và bóc tách Role
     const token = localStorage.getItem('token');
     let isAdmin = false;
+    let userName = 'Khách'; // Mặc định
 
     if (token) {
         try {
-            // Cắt lấy phần Payload (phần thứ 2 của Token) và giải mã
             const payloadBase64 = token.split('.')[1];
-            // Decode Base64 thành chuỗi JSON, rồi parse ra Object
             const decodedPayload = JSON.parse(atob(payloadBase64));
-
-            // Kiểm tra xem có phải chúa tể (admin) không
             if (decodedPayload.role === 'admin') {
                 isAdmin = true;
+            }
+
+            // Lấy thêm thông tin user từ localStorage (lúc login mình có lưu)
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const userObj = JSON.parse(userStr);
+                // Ưu tiên lấy fullName, không có thì lấy phần đầu của email
+                userName = userObj.fullName || userObj.email.split('@')[0];
             }
         } catch (error) {
             console.error('Lỗi giải mã token ở Navbar:', error);
         }
     }
 
-    // 2. Tạo cục HTML cho nút Dashboard (Nếu là admin thì có code, không thì rỗng)
+    // 2. Tạo nút Dashboard cho Admin
     const adminDashboardBtn = isAdmin
         ? `<a href="/admin/dashboard.html" class="font-artusi rounded-full bg-[#229ebd] text-white px-5 py-2 font-bold hover:bg-[#1a8bb0] shadow-md hover:-translate-y-0.5 transition-all duration-300">Dashboard</a>`
-        : ''; 
+        : '';
 
     // 3. Chuỗi HTML Navbar
     const navbarHTML = `
@@ -49,44 +54,122 @@ function renderNavbar() {
                     <a href="/login.html?view=register" class="font-artusi rounded-full bg-[#229ebd] px-6 py-2.5 font-bold text-white transition-all duration-300 hover:bg-[#1a8bb0] hover:-translate-y-0.5 shadow-md hover:shadow-lg">Register</a>
                 </div>
 
-                <div id="user-actions" class="hidden flex items-center space-x-4">
-                    <span id="user-name-display" class="font-bogart font-bold text-gray-800">Xin chào,</span>
+                <div id="user-actions" class="hidden items-center space-x-4">
                     
                     ${adminDashboardBtn} 
                     
-                    <button id="logout-btn" class="font-artusi rounded-full bg-gray-100 text-gray-600 px-5 py-2 font-bold hover:bg-red-500 hover:text-white transition duration-300">Logout</button>
+                    <div class="relative" id="user-dropdown-container">
+                        <button id="user-dropdown-trigger" class="flex items-center space-x-1 font-bogart font-bold text-gray-800 hover:text-[#229ebd] focus:outline-none transition-colors">
+                            <span id="user-name-display">Xin chào, <span class="text-[#229ebd]">${userName}</span></span>
+                            <svg class="w-4 h-4 transition-transform duration-200" id="user-dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+
+                        <div id="user-dropdown-menu" class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 hidden opacity-0 transition-all duration-200 transform origin-top-right z-50 scale-95">
+                            <div class="p-2 space-y-1 font-artusi">
+                                <a href="/profile.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#229ebd] rounded-lg transition-colors">Thông tin cá nhân</a>
+                                
+                                <a href="/payment.html" class="flex justify-between items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#229ebd] rounded-lg transition-colors group">
+                                    <span>Thanh toán đơn</span>
+                                    <span id="pending-badge" class="hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full group-hover:scale-110 transition-transform">1</span>
+                                </a>
+                                
+                                <a href="/history.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#229ebd] rounded-lg transition-colors">Lịch sử đặt phòng</a>
+                                
+                                <div class="h-px bg-gray-100 my-1"></div>
+                                
+                                <button id="logout-btn" class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                    Đăng xuất
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-            <div class="lg:hidden">
-                <button id="mobile-menu-button" class="text-gray-700 hover:text-[#229ebd] focus:outline-none transition">
-                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
             </div>
-        </div>
-
-        <div id="mobile-menu" class="mt-2 hidden bg-white py-4 shadow-inner border-t border-gray-100 lg:hidden">
-            <div class="flex flex-col space-y-2 px-6">
-                <a href="/about.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">About Us</a>
-                <a href="/features.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Feature</a>
-                <a href="/membership.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Membership</a>
-                <a href="/blog.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Blog</a>
-                <a href="/faq.html" class="font-bogart block py-3 font-bold text-gray-700 hover:text-[#229ebd]">FAQ</a>
-                <div class="h-px bg-gray-100 my-2"></div>
-                
-                ${isAdmin ? `<a href="/admin/dashboard.html" class="font-artusi block py-3 font-bold text-[#229ebd]">Dashboard Admin</a>` : ''}
-                
-                <a href="/login.html" class="font-artusi block py-3 font-bold text-gray-700 hover:text-[#229ebd]">Log In</a>
-                <a href="/login.html?view=register" class="font-artusi block rounded-lg text-[#229ebd] py-2 font-black">Register Now</a>
-            </div>
-        </div>
     </nav>
     `;
 
-    // Bơm HTML vào thẻ có id="app-navbar"
+    // 4. Bơm HTML vào DOM
     const placeholder = document.getElementById('app-navbar');
     if (placeholder) {
         placeholder.innerHTML = navbarHTML;
+    }
+
+    // --- 5. LOGIC HIỂN THỊ DỰA VÀO TOKEN ---
+    // Sau khi bơm HTML xong, mình dùng JS để gỡ áo tàng hình
+    if (token) {
+        const guestDiv = document.getElementById('guest-actions');
+        const userDiv = document.getElementById('user-actions');
+
+        if (guestDiv) guestDiv.classList.add('hidden'); // Giấu Log In
+        if (userDiv) {
+            userDiv.classList.remove('hidden'); // Lột áo tàng hình
+            userDiv.classList.add('flex'); // Trả lại layout flex cho nó xếp hàng ngang
+        }
+    }
+
+    // --- 6. LOGIC XỬ LÝ DROPDOWN ---
+    setupDropdownLogic();
+}
+
+function setupDropdownLogic() {
+    const trigger = document.getElementById('user-dropdown-trigger');
+    const menu = document.getElementById('user-dropdown-menu');
+    const icon = document.getElementById('user-dropdown-icon');
+
+    if (!trigger || !menu) return; // Nếu khách chưa đăng nhập thì mấy cái này ko tồn tại, bỏ qua.
+
+    // Bấm vào tên user -> Bật/Tắt menu
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài body
+
+        // Toggle class để hiện/ẩn
+        menu.classList.toggle('hidden');
+
+        // Timeout xíu để CSS transition (scale, opacity) chạy cho mượt
+        setTimeout(() => {
+            menu.classList.toggle('opacity-0');
+            menu.classList.toggle('scale-95');
+            menu.classList.toggle('opacity-100');
+            menu.classList.toggle('scale-100');
+        }, 10);
+
+        // Xoay icon mũi tên cho nó sinh động
+        icon.classList.toggle('rotate-180');
+    });
+
+    // Giải thích tận gốc: Click ra ngoài thì phải tự động đóng Menu lại
+    // Ví dụ: Đang mở Dropdown mà bấm ra khoảng trắng màn hình thì nó phải thu vào.
+    document.addEventListener('click', (event) => {
+        const isClickInside =
+            trigger.contains(event.target) || menu.contains(event.target);
+
+        if (!isClickInside && !menu.classList.contains('hidden')) {
+            // Hiệu ứng thu vào
+            menu.classList.remove('opacity-100', 'scale-100');
+            menu.classList.add('opacity-0', 'scale-95');
+            icon.classList.remove('rotate-180');
+
+            // Đợi CSS transition chạy xong (200ms) rồi mới set hidden
+            setTimeout(() => {
+                menu.classList.add('hidden');
+            }, 200);
+        }
+    });
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Ông muốn đăng xuất khỏi hệ thống?')) {
+                // Xóa sạch dấu vết
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                // Tải lại trang web (lúc này token mất -> nó sẽ tự hiện lại nút Login)
+                window.location.href = '/index.html';
+            }
+        });
     }
 }
 

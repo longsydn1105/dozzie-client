@@ -638,7 +638,7 @@ async function loadServicePackages() {
         selectEl.disabled = true;
 
         // 2. Gọi API lấy data
-        const response = await serviceApi.getAllPackages();
+        const response = await serviceApi.getActivePackages();
         const packages = response.data?.data || response.data || [];
 
         // 3. Lọc ra các gói đang bật (isActive === true)

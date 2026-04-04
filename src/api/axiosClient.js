@@ -21,14 +21,21 @@ axiosClient.interceptors.response.use(
             error.response &&
             (error.response.status === 401 || error.response.status === 403)
         ) {
-            alert(
-                error.response.data.message || 'Phiên đăng nhập không hợp lệ!',
-            );
-
+            // Bước 1: Cứ gặp 401/403 là dọn dẹp bộ nhớ cho sạch sẽ đã
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
 
-            window.location.href = '/login.html';
+            // Bước 2: Cài chốt chặn "chống tự reload"
+            if (!window.location.pathname.includes('/login.html')) {
+                alert(
+                    error.response.data.message ||
+                        'Phiên đăng nhập không hợp lệ hoặc tài khoản bị khóa!',
+                );
+                window.location.href = '/login.html';
+            }
         }
+
+        // Bước 3: Bắt buộc phải ném cái lỗi này đi tiếp để đoạn catch(error) bên form login còn hứng được
         return Promise.reject(error);
     },
 );

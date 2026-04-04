@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quản Lý Gói Dịch Vụ - Dozzie Admin</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+
+    <body class="bg-gray-100 font-sans antialiased">
+        <div class="flex min-h-screen">
+            <div id="app-sidebar" class="hidden w-64 shrink-0 md:block"></div>
+
+            <main class="w-full flex-1 overflow-x-hidden p-10">
+                <div class="mx-auto max-w-7xl">
+                    <div class="mb-10 flex items-center justify-between">
+                        <h1
+                            class="text-dozzie-navy border-dozzie-blue inline-block border-b-4 pb-2 text-3xl font-extrabold"
+                        >
+                            Quản Lý Gói Dịch Vụ
+                        </h1>
+                        <button
+                            id="btn-open-modal"
+                            class="bg-dozzie-blue hover:bg-dozzie-blue/80 rounded-xl px-6 py-3 font-bold text-white shadow-lg transition-all active:scale-95"
+                        >
+                            + Thêm Gói Mới
+                        </button>
+                    </div>
+
+                    <div
+                        id="packages-container"
+                        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    >
+                        <p class="font-medium text-gray-500">
+                            Đang tải dữ liệu...
+                        </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div
+            id="create-modal"
+            class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-all"
+        >
+            <div
+                class="border-dozzie-blue w-full max-w-md rounded-[2rem] border-t-4 bg-white p-8 shadow-xl"
+            >
+                <h2 class="text-dozzie-navy mb-6 text-2xl font-bold">
+                    Tạo Gói Mới
+                </h2>
+
+                <form id="create-form" class="space-y-4">
+                    <div>
+                        <label
+                            class="text-dozzie-navy mb-1 block text-sm font-bold"
+                            >Tên gói:</label
+                        >
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="VD: Gói Qua Đêm"
+                            required
+                            class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-dozzie-navy mb-1 block text-sm font-bold"
+                            >Thời gian (Giờ):</label
+                        >
+                        <input
+                            type="number"
+                            name="hours"
+                            placeholder="VD: 12"
+                            required
+                            min="1"
+                            class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-dozzie-navy mb-1 block text-sm font-bold"
+                            >Giá tiền (VNĐ):</label
+                        >
+                        <input
+                            type="number"
+                            name="price"
+                            placeholder="VD: 250000"
+                            required
+                            min="0"
+                            class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            class="text-dozzie-navy mb-1 block text-sm font-bold"
+                            >Trạng thái ban đầu:</label
+                        >
+                        <select
+                            name="isActive"
+                            class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                        >
+                            <option value="true">Hoạt động</option>
+                            <option value="false">Ẩn</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-8 flex gap-4 border-t border-gray-100 pt-4">
+                        <button
+                            type="submit"
+                            class="bg-dozzie-blue hover:bg-opacity-80 flex-1 rounded-lg py-3 font-bold text-white transition-colors"
+                        >
+                            Xác nhận tạo
+                        </button>
+                        <button
+                            type="button"
+                            id="btn-close-modal"
+                            class="flex-1 rounded-lg bg-red-500 py-3 font-bold text-white transition-colors hover:bg-red-600"
+                        >
+                            Hủy bỏ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module">
+            import { renderSidebar } from '../js/components/AdminSidebar.js';
+            import '../js/servicePackages.js';
+
+            // Lệnh vẽ sidebar ngay lập tức khi load HTML
+            renderSidebar('app-sidebar');
+        </script>
+    </body>
+</html>
