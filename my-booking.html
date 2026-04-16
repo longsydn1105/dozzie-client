@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lịch Sử Đặt Phòng - Dozzie</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                            'dozzie-gray': '#F8FAFC',
+                        },
+                        fontFamily: {
+                            sans: ['Inter', 'sans-serif'], // Đổi font nếu dự án ông có font riêng
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body
+        class="bg-dozzie-gray flex min-h-screen flex-col text-gray-800 antialiased"
+    >
+        <div id="app-navbar"></div>
+
+        <main class="container mx-auto max-w-6xl flex-grow px-4 py-10">
+            <div class="flex flex-col gap-8 md:flex-row">
+                <aside class="w-full shrink-0 md:w-64">
+                    <div
+                        class="sticky top-24 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+                    >
+                        <div class="mb-8 flex items-center gap-4">
+                            <div
+                                class="bg-dozzie-blue/10 text-dozzie-blue flex h-14 w-14 items-center justify-center rounded-full text-xl font-bold"
+                            >
+                                👤
+                            </div>
+                            <div>
+                                <h3
+                                    class="text-dozzie-navy text-lg font-bold"
+                                    id="sidebar-user-name"
+                                >
+                                    Đang tải...
+                                </h3>
+                                <p class="text-xs text-gray-500">
+                                    Khách hàng Dozzie
+                                </p>
+                            </div>
+                        </div>
+
+                        <nav class="space-y-2">
+                            <a
+                                href="/profile.html"
+                                class="hover:bg-dozzie-blue/5 hover:text-dozzie-blue flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-gray-600 transition-colors"
+                            >
+                                <span>🛠</span> Thông tin cá nhân
+                            </a>
+                            <a
+                                href="/my-booking.html"
+                                class="bg-dozzie-blue flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-white shadow-md transition-transform hover:-translate-y-0.5"
+                            >
+                                <span>📜</span> Lịch sử đặt phòng
+                            </a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <section class="flex-1">
+                    <h2 class="text-dozzie-navy mb-6 text-2xl font-extrabold">
+                        Chuyến Đi Của Tôi
+                    </h2>
+
+                    <div id="bookings-container" class="space-y-6">
+                        <div class="py-10 text-center text-gray-500">
+                            <div
+                                class="border-dozzie-blue mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"
+                            ></div>
+                            Đang lấy dữ liệu chuyến đi...
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <div id="app-footer"></div>
+        <script src="./js/auth-guard.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="./js/components.js"></script>
+        <script type="module">
+            import bookingApi from './src/api/bookingApi.js';
+
+            document.addEventListener('DOMContentLoaded', () => {
+                // Hiển thị tên user trên Sidebar
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const userObj = JSON.parse(userStr);
+                    document.getElementById('sidebar-user-name').textContent =
+                        userObj.fullName || userObj.email.split('@')[0];
+                }
+
+                // Load danh sách Booking
+                loadMyBookings();
+            });
+
+            async function loadMyBookings() {
+                const container = document.getElementById('bookings-container');
+
+                try {
+                    const response = await bookingApi.getMyBookings();
+                    const bookings = response.data.data || [];
+
+                    if (bookings.length === 0) {
+                        container.innerHTML = `
+                        <div class="bg-white rounded-2xl p-10 text-center border border-dashed border-gray-300 shadow-sm">
+                            <div class="text-6xl mb-4">🧳</div>
+                            <h3 class="text-xl font-bold text-dozzie-navy mb-2">Chưa có chuyến đi nào!</h3>
+                            <p class="text-gray-500 mb-6">Bạn chưa đặt phòng lần nào. Trải nghiệm kén ngủ siêu cấp ngay hôm nay nhé.</p>
+                            <a href="/rooms.html" class="inline-block bg-dozzie-navy text-white font-bold py-3 px-8 rounded-xl hover:bg-opacity-90 transition-all shadow-md hover:-translate-y-1">ĐẶT PHÒNG NGAY</a>
+                        </div>
+                    `;
+                        return;
+                    }
+
+                    container.innerHTML = ''; // Xóa chữ loading
+
+                    // Render từng booking thành dạng Thẻ (Card)
+                    bookings.forEach((bk) => {
+                        // 1. "Áo giáp" chống lỗi dữ liệu
+                        const room = bk.roomId || {};
+                        const roomName =
+                            typeof room === 'object'
+                                ? room.label || room._id
+                                : room || 'Phòng bị xóa';
+
+                        const pkg = bk.packageId || {};
+                        const pkgName = pkg.name
+                            ? `${pkg.name} (${pkg.hours}h)`
+                            : 'Gói tùy chỉnh';
+
+                        const startTime = new Date(bk.startTime);
+                        const endTime = new Date(bk.endTime);
+                        const price = (bk.totalPrice || 0).toLocaleString(
+                            'vi-VN',
+                        );
+
+                        // 2. Logic Trạng thái (Màu sắc và Tên)
+                        let statusColor, statusText, statusIcon;
+                        switch (bk.status) {
+                            case 'pending':
+                                statusColor = 'bg-yellow-100 text-yellow-700';
+                                statusText = 'Chờ Thanh Toán';
+                                statusIcon = '⏳';
+                                break;
+                            case 'active':
+                                statusColor = 'bg-green-100 text-green-700';
+                                statusText = 'Đang Sử Dụng';
+                                statusIcon = '🟢';
+                                break;
+                            case 'completed':
+                                statusColor = 'bg-blue-100 text-blue-700';
+                                statusText = 'Đã Hoàn Thành';
+                                statusIcon = '✅';
+                                break;
+                            case 'cancelled':
+                            case 'admin_cancelled':
+                            case 't': // Bắt luôn cái lỗi chữ "t" trong DB của ông
+                                statusColor = 'bg-gray-200 text-gray-600';
+                                statusText = 'Đã Hủy';
+                                statusIcon = '❌';
+                                break;
+                            default:
+                                statusColor = 'bg-gray-100 text-gray-600';
+                                statusText = bk.status;
+                                statusIcon = '📌';
+                        }
+
+                        // 3. Render Card HTML
+                        const cardHTML = `
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 ${statusColor.split(' ')[0].replace('100', '400')}"></div>
+                            
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <h3 class="text-xl font-black text-dozzie-navy flex items-center gap-2">
+                                        🛏️ ${roomName}
+                                    </h3>
+                                    <p class="text-sm text-gray-500 font-medium mt-1">📦 ${pkgName}</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="${statusColor} font-bold px-3 py-1.5 rounded-lg text-xs uppercase tracking-wide flex items-center gap-1">
+                                        ${statusIcon} ${statusText}
+                                    </span>
+                                    <p class="text-xs text-gray-400 mt-2 font-mono">Mã Đơn: #${bk._id.slice(-6).toUpperCase()}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-xl p-4 mb-6 flex flex-col md:flex-row gap-4 md:gap-10 border border-gray-100">
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Check-in</p>
+                                    <p class="font-bold text-dozzie-navy text-lg">${startTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</p>
+                                    <p class="text-sm text-gray-600">${startTime.toLocaleDateString('vi-VN')}</p>
+                                </div>
+                                
+                                <div class="hidden md:flex flex-col items-center justify-center text-gray-300">
+                                    <div class="h-px w-10 bg-gray-300 mb-1"></div>
+                                    <span class="text-xs">Đến</span>
+                                </div>
+
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Check-out</p>
+                                    <p class="font-bold text-dozzie-navy text-lg">${endTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</p>
+                                    <p class="text-sm text-gray-600">${endTime.toLocaleDateString('vi-VN')}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col md:flex-row justify-between items-center pt-4 border-t border-gray-100 gap-4">
+                                <div class="w-full md:w-auto bg-blue-50 text-dozzie-blue px-4 py-2.5 rounded-xl font-mono text-sm border border-blue-100 text-center flex items-center justify-center gap-2">
+                                    <span class="text-xs font-bold text-gray-500 uppercase font-sans">Chìa khóa phòng:</span> 
+                                    <span class="font-black tracking-widest text-lg">${bk.digitalKey || '------'}</span>
+                                </div>
+                                
+                                <div class="text-right w-full md:w-auto">
+                                    <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-0.5">Tổng thanh toán</p>
+                                    <p class="text-2xl font-black text-red-500">${price} ₫</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                        container.insertAdjacentHTML('beforeend', cardHTML);
+                    });
+                } catch (error) {
+                    console.error('Lỗi tải danh sách Booking:', error);
+                    container.innerHTML = `
+                    <div class="bg-red-50 text-red-500 p-6 rounded-2xl text-center font-bold border border-red-100">
+                        Lỗi kết nối máy chủ. Không thể tải chuyến đi của bạn lúc này!
+                    </div>
+                `;
+                }
+            }
+        </script>
+    </body>
+</html>

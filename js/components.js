@@ -10,19 +10,33 @@ function renderNavbar() {
         try {
             const payloadBase64 = token.split('.')[1];
             const decodedPayload = JSON.parse(atob(payloadBase64));
-            if (decodedPayload.role === 'admin') {
-                isAdmin = true;
-            }
 
-            // Lấy thêm thông tin user từ localStorage (lúc login mình có lưu)
-            const userStr = localStorage.getItem('user');
-            if (userStr) {
-                const userObj = JSON.parse(userStr);
-                // Ưu tiên lấy fullName, không có thì lấy phần đầu của email
-                userName = userObj.fullName || userObj.email.split('@')[0];
+            // --- LOGIC MỚI: KIỂM TRA HẠN SỬ DỤNG TOKEN ---
+            const currentTime = Math.floor(Date.now() / 1000); // Lấy thời gian hiện tại (tính bằng giây)
+
+            if (decodedPayload.exp && decodedPayload.exp < currentTime) {
+                // TOKEN ĐÃ HẾT HẠN!
+                console.warn('Token đã hết hạn, tự động đăng xuất trên UI.');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                token = null; // Gán bằng null để code bên dưới tự động render ra nút Log In
+            } else {
+                // TOKEN CÒN SỐNG -> Lấy data ra dùng bình thường
+                if (decodedPayload.role === 'admin') {
+                    isAdmin = true;
+                }
+
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const userObj = JSON.parse(userStr);
+                    userName = userObj.fullName || userObj.email.split('@')[0];
+                }
             }
         } catch (error) {
             console.error('Lỗi giải mã token ở Navbar:', error);
+            // Nếu token rác, decode lỗi thì cũng xóa luôn cho an toàn
+            localStorage.removeItem('token');
+            token = null;
         }
     }
 
@@ -73,7 +87,7 @@ function renderNavbar() {
                                     <span id="pending-badge" class="hidden bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full group-hover:scale-110 transition-transform">1</span>
                                 </a>
                                 
-                                <a href="/history.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#229ebd] rounded-lg transition-colors">Lịch sử đặt phòng</a>
+                                <a href="/my-booking.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#229ebd] rounded-lg transition-colors">Lịch sử đặt phòng</a>
                                 
                                 <div class="h-px bg-gray-100 my-1"></div>
                                 

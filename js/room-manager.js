@@ -263,15 +263,30 @@ const RoomManager = {
      */
     async handleSubmit(e) {
         e.preventDefault();
-        const payload = Object.fromEntries(new FormData(e.target).entries());
-        payload.floor = Number(payload.floor);
+        const formData = new FormData(e.target);
+        const rawData = Object.fromEntries(formData.entries());
+
+        // Bắt buộc phải cấu trúc lại payload vì form đang gửi lên các key phẳng (flat keys)
+        const payload = {
+            _id: rawData._id.toUpperCase().trim(), // Ép hoa ID cho chuẩn
+            label: rawData.label,
+            gender: rawData.gender,
+            floor: Number(rawData.floor),
+            status: rawData.status,
+            iotConfig: {
+                deviceId: rawData['iotConfig.deviceId'],
+                topicDoor: rawData['iotConfig.topicDoor'],
+                topicPower: rawData['iotConfig.topicPower'],
+            },
+        };
 
         try {
             const res = await roomApi.createRoom(payload);
             if (res.data?.success || res.success) {
                 alert('Thông báo: Khởi tạo dữ liệu phòng mới thành công.');
-                this.closeModal();
-                this.loadRooms();
+                this.closeModal(); // Đóng modal
+                e.target.reset(); // Xóa sạch dữ liệu trong form
+                this.loadRooms(); // Render lại danh sách
             }
         } catch (err) {
             const msg =
@@ -279,13 +294,20 @@ const RoomManager = {
             alert('Thông báo lỗi: ' + msg);
         }
     },
-
     openModal() {
-        document.getElementById('addRoomModal')?.classList.remove('hidden');
+        const modal = document.getElementById('addRoomModal');
+        if (modal) {
+            modal.classList.remove('hidden'); // Gỡ áo tàng hình
+            modal.classList.add('flex'); // Bật công tắc flex để nó tự động căn giữa Form
+        }
     },
 
     closeModal() {
-        document.getElementById('addRoomModal')?.classList.add('hidden');
+        const modal = document.getElementById('addRoomModal');
+        if (modal) {
+            modal.classList.add('hidden'); // Mặc lại áo tàng hình
+            modal.classList.remove('flex'); // Tắt flex đi cho sạch sẽ
+        }
     },
 };
 

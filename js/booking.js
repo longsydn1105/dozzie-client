@@ -293,122 +293,175 @@ async function fetchAndMarkBusyRooms() {
 
     if (!dateStr || !timeStr) return;
 
-    // 1. Tạo mốc thời gian khách đang chọn (Lấy timestamp số cho chuẩn)
     const userStartObj = new Date(`${dateStr}T${timeStr}:00`);
     const userEndObj = new Date(
         userStartObj.getTime() + duration * 60 * 60 * 1000,
     );
-
     const userStartTime = userStartObj.getTime();
     const userEndTime = userEndObj.getTime();
 
     try {
-        // Reset trạng thái phòng trước khi vẽ lại
+        // BƯỚC A: Xóa bỏ các màu "Kẹt lịch" của lần chọn trước
         document.querySelectorAll('.room-pod').forEach((el) => {
-            el.classList.remove('booked-pod');
-            // Reset lại nội dung (Lấy lại tên phòng từ data-id)
-            const roomId = el.getAttribute('data-id');
-            el.innerHTML = `<span class="font-bold text-xs text-gray-500 pointer-events-none">${roomId}</span>`;
+            // Chỉ reset những phòng ĐANG CÓ THỂ CLICK (Tức là available ban đầu)
+            // Không được reset bậy bạ mấy phòng đang bảo trì
+            if (el.hasAttribute('onclick')) {
+                el.classList.remove(
+                    'booked-pod',
+                    'bg-gray-100',
+                    'opacity-60',
+                    'pointer-events-none',
+                );
+                el.classList.add(
+                    'bg-white',
+                    'hover:bg-blue-50',
+                    'cursor-pointer',
+                );
+                const roomId = el.getAttribute('data-id');
+                el.innerHTML = `<span class="font-bold text-xs text-gray-500 pointer-events-none">${roomId}</span>`;
+            }
         });
 
-        // 2. Gọi API lấy danh sách booking trong ngày
-        const res = await fetch(
-            `https://dozzie-server.onrender.com/api/bookings?date=${dateStr}`,
-        );
-        const result = await res.json();
-        const bookings = result.data || [];
+        // BƯỚC B: Gọi API Booking (Thay thế fetch)
+        const res = await bookingApi.getBookings(); // Lấy tất cả booking
+        const bookings = res.data?.data || [];
         const busyRoomIds = [];
 
-        // 3. Duyệt từng booking để tìm phòng kẹt
         bookings.forEach((booking) => {
-            // Chuyển giờ trong DB (UTC) sang timestamp số
+            // Bỏ qua các đơn đã hủy
+            if (
+                booking.status === 'cancelled' ||
+                booking.status === 'admin_cancelled'
+            )
+                return;
+
             const bookStartTime = new Date(booking.startTime).getTime();
             const bookEndTime = new Date(booking.endTime).getTime();
 
-            // Logic Check Trùng (Overlap):
-            // (Start A < End B) AND (End A > Start B)
+            // Kiểm tra giao nhau thời gian
             const isOverlap =
                 bookStartTime < userEndTime && bookEndTime > userStartTime;
 
             if (isOverlap) {
-                // Nếu trùng -> Nhét hết roomIds của booking đó vào danh sách bận
-                booking.roomIds.forEach((id) => {
-                    if (!busyRoomIds.includes(id)) busyRoomIds.push(id);
-                });
+                // Sửa lỗi roomIds: Trong DB của Đại Ca lưu 1 string roomId thôi!
+                if (booking.roomId && !busyRoomIds.includes(booking.roomId)) {
+                    busyRoomIds.push(booking.roomId);
+                }
             }
         });
 
-        console.log('Danh sách phòng bận:', busyRoomIds); // Log ra để debug nếu cần
-
-        // 4. Tô màu phòng bận lên UI
+        // BƯỚC C: Tô màu các phòng bị kẹt
         busyRoomIds.forEach((id) => {
             const el = document.querySelector(`.room-pod[data-id="${id}"]`);
-            if (el) {
-                // Thêm class bận
-                el.classList.add('booked-pod');
-                // Nếu lỡ đang chọn phòng này thì bỏ chọn ngay
-                el.classList.remove('selected-pod');
-                // Đổi nội dung thành chữ "Bận"
+            // Chỉ khóa phòng nếu nó đang mở (tránh chèn ép lên phòng đang bảo trì)
+            if (el && el.hasAttribute('onclick')) {
+                el.classList.add(
+                    'booked-pod',
+                    'bg-gray-100',
+                    'opacity-60',
+                    'pointer-events-none',
+                );
+                el.classList.remove(
+                    'bg-white',
+                    'hover:bg-blue-50',
+                    'cursor-pointer',
+                    'selected-pod',
+                );
                 el.innerHTML =
-                    '<span class="font-bold text-[10px] text-gray-400 transform -rotate-45">Bận</span>';
+                    '<span class="font-bold text-[9px] text-gray-400 uppercase transform -rotate-45 block text-center mt-4">Kẹt Lịch</span>';
 
-                // Cập nhật lại mảng selectedRooms của sếp nếu lỡ bị xoá
-                if (selectedRooms.includes(id)) {
+                // Gỡ phòng ra khỏi giỏ hàng nếu khách lỡ tay chọn
+                if (
+                    typeof selectedRooms !== 'undefined' &&
+                    selectedRooms.includes(id)
+                ) {
                     selectedRooms = selectedRooms.filter((r) => r !== id);
-                    updateSelectionStatus();
+                    if (typeof updateSelectionStatus === 'function')
+                        updateSelectionStatus();
                 }
             }
         });
     } catch (err) {
-        console.error('Lỗi check phòng:', err);
+        console.error('Lỗi check phòng kẹt lịch:', err);
     }
 }
+
 // --- HÀM VẼ SÀN ---
-function renderFloor(containerId, prefix, totalRooms) {
+function renderFloor(containerId, roomsArray) {
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
-    const totalBlocks = Math.ceil(totalRooms / 2);
-    for (let i = 0; i < totalBlocks; i++) {
-        const roomA_ID = `${prefix}-${String(i * 2 + 1).padStart(2, '0')}`;
-        const roomB_ID = `${prefix}-${String(i * 2 + 2).padStart(2, '0')}`;
+
+    // Sắp xếp mảng phòng theo ID (M-01 -> M-02 -> M-15 -> M-19)
+    roomsArray.sort((a, b) =>
+        a._id.localeCompare(b._id, undefined, { numeric: true }),
+    );
+
+    // Cứ 2 phòng thì nhét vào 1 block (1 hình vuông chia đôi)
+    for (let i = 0; i < roomsArray.length; i += 2) {
+        const roomA = roomsArray[i];
+        const roomB = roomsArray[i + 1]; // Có thể bị undefined nếu lẻ phòng
+
+        // Hàm helper tạo HTML cho 1 kén
+        const buildPod = (room, shapeClass, alignmentClass) => {
+            if (!room) return ''; // Bỏ qua nếu mảng lẻ
+
+            const isAvailable = room.status === 'available';
+
+            // Nếu phòng không available -> Bôi xám, tắt click (pointer-events-none)
+            const baseClass = isAvailable
+                ? 'bg-white hover:bg-blue-50 cursor-pointer'
+                : 'bg-gray-100 opacity-60 cursor-not-allowed pointer-events-none';
+
+            // Text hiển thị: Sẵn sàng thì hiện ID, đang bận thì hiện ID + Trạng thái
+            const displayText = isAvailable
+                ? `<span class="font-bold text-xs text-gray-500 pointer-events-none">${room._id}</span>`
+                : `<div class="flex flex-col items-center pointer-events-none">
+                    <span class="font-bold text-xs text-gray-400 line-through">${room._id}</span>
+                    <span class="text-[8px] text-red-500 font-bold uppercase mt-1">${room.status}</span>
+                   </div>`;
+
+            // CHỈ gắn sự kiện onclick nếu phòng khả dụng
+            const clickEvent = isAvailable
+                ? 'onclick="toggleRoomSelection(this)"'
+                : '';
+
+            return `
+                <div class="room-pod ${shapeClass} absolute inset-0 border-2 border-gray-200 transition-colors z-10 flex ${alignmentClass} p-2 ${baseClass}"
+                     data-id="${room._id}" ${clickEvent}>
+                    ${displayText}
+                </div>
+            `;
+        };
+
         const blockHTML = `
             <div class="relative w-full aspect-[3/4] group bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-                <div class="room-pod pod-shape-a absolute inset-0 bg-white border-2 border-gray-200 hover:bg-blue-50 cursor-pointer transition-colors z-10 flex items-start justify-start pl-2 pt-2"
-                     data-id="${roomA_ID}" onclick="toggleRoomSelection(this)">
-                    <span class="font-bold text-xs text-gray-500 pointer-events-none">${roomA_ID}</span>
-                </div>
-                <div class="room-pod pod-shape-b absolute inset-0 bg-gray-50 border-2 border-gray-200 hover:bg-blue-50 cursor-pointer transition-colors z-20 flex items-end justify-end pr-2 pb-2"
-                     data-id="${roomB_ID}" onclick="toggleRoomSelection(this)">
-                    <span class="font-bold text-xs text-gray-500 pointer-events-none">${roomB_ID}</span>
-                </div>
+                ${buildPod(roomA, 'pod-shape-a', 'items-start justify-start')}
+                ${buildPod(roomB, 'pod-shape-b z-20', 'items-end justify-end')}
             </div>
         `;
         container.insertAdjacentHTML('beforeend', blockHTML);
     }
 }
 
+//----------LẤY VÀ PHÂN LOẠI PHÒNG ---
 async function loadAndRenderRooms() {
     try {
-        // 1. Gọi API lấy danh sách phòng thật từ DB
         const response = await roomApi.getAllRooms();
         const rooms = response.data?.data || [];
 
-        // 2. Lọc ra mảng phòng Nam và Nữ
         const maleRooms = rooms.filter((r) => r.gender === 'Nam');
         const femaleRooms = rooms.filter((r) => r.gender === 'Nữ');
 
-        // 3. Vẽ dựa trên số lượng thật (rooms.length)
-        renderFloor('map-floor-male', 'M', maleRooms.length);
-        renderFloor('map-floor-female', 'FM', femaleRooms.length);
+        // Truyền MẢNG DỮ LIỆU thật vào để vẽ, không truyền số lượng nữa
+        renderFloor('map-floor-male', maleRooms);
+        renderFloor('map-floor-female', femaleRooms);
 
-        // Sau khi vẽ xong thì mới check xem phòng nào bận để tô màu
         checkAvailabilityAndCalcTime();
     } catch (err) {
         console.error('Lỗi load phòng thực tế:', err);
     }
 }
-
 // --- HÀM CHỌN PHÒNG ---
 window.toggleRoomSelection = function (element) {
     if (element.classList.contains('booked-pod')) {
