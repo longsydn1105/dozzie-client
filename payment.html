@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Thanh Toán - Dozzie</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="bg-gray-50 font-sans text-gray-900 antialiased">
+        <div id="app-navbar"></div>
+
+        <main class="container mx-auto min-h-[70vh] px-4 py-12">
+            <div class="mx-auto max-w-2xl">
+                <h1
+                    class="text-dozzie-navy mb-8 text-center text-3xl font-extrabold"
+                >
+                    Thanh toán đặt phòng
+                </h1>
+
+                <div id="payment-content">
+                    <div class="flex justify-center py-20">
+                        <div
+                            class="border-dozzie-blue h-12 w-12 animate-spin rounded-full border-b-2"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="app-footer"></div>
+        <script src="./js/auth-guard.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="module" src="./js/payment.js"></script>
+        <script type="module" src="./js/components.js"></script>
+    </body>
+</html>

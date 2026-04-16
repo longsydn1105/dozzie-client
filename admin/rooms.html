@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Quản Lý Hệ Thống Pod - Dozzie Admin</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'dozzie-blue': '#219EBC',
+                            'dozzie-navy': '#18233B',
+                        },
+                    },
+                },
+            };
+        </script>
+        <script src="../js/admin-auth-guard.js"></script>
+    </head>
+    <body class="bg-gray-100 font-sans antialiased">
+        <div class="flex min-h-screen">
+            <div id="app-sidebar" class="hidden w-64 shrink-0 md:block"></div>
+
+            <main class="w-full flex-1 overflow-x-hidden bg-gray-100 p-10">
+                <div class="mx-auto max-w-360">
+                    <div class="mb-10 flex items-center justify-between">
+                        <h1 class="text-dozzie-navy text-3xl font-extrabold">
+                            Quản Lý Hệ Thống Pod
+                        </h1>
+                        <button
+                            id="btnAddRoom"
+                            class="bg-dozzie-blue hover:bg-dozzie-blue/80 rounded-xl px-6 py-3 font-bold text-white shadow-lg transition-all active:scale-95"
+                        >
+                            + Thêm Phòng Mới
+                        </button>
+                    </div>
+
+                    <div class="space-y-12">
+                        <div
+                            class="rounded-[2rem] border border-gray-200 bg-white p-8 shadow-sm"
+                        >
+                            <div
+                                class="bg-dozzie-navy mb-8 inline-block rounded-full px-6 py-2 text-sm font-bold tracking-widest text-white italic"
+                            >
+                                TẦNG 3 - KHU NAM (M)
+                            </div>
+                            <div
+                                id="male-rooms-grid"
+                                class="grid grid-cols-2 gap-6 md:grid-cols-4 xl:grid-cols-5"
+                            ></div>
+                        </div>
+
+                        <div
+                            class="rounded-[2rem] border border-gray-200 bg-white p-8 shadow-sm"
+                        >
+                            <div
+                                class="mb-8 inline-block rounded-full bg-pink-600 px-6 py-2 text-sm font-bold tracking-widest text-white italic"
+                            >
+                                TẦNG 2 - KHU NỮ (F)
+                            </div>
+                            <div
+                                id="female-rooms-grid"
+                                class="grid grid-cols-2 gap-6 md:grid-cols-4 xl:grid-cols-5"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div
+            id="addRoomModal"
+            class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto bg-black/50 pt-10 pb-10 backdrop-blur-sm transition-all"
+        >
+            <div
+                class="border-dozzie-blue w-full max-w-2xl rounded-[2rem] border-t-4 bg-white p-8 shadow-xl"
+            >
+                <h2 class="text-dozzie-navy mb-6 text-2xl font-extrabold">
+                    Thêm Phòng (Pod) Mới
+                </h2>
+
+                <form id="formAddRoom" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label
+                                class="text-dozzie-navy mb-1 block text-sm font-bold"
+                                >Mã Phòng (ID):</label
+                            >
+                            <input
+                                type="text"
+                                name="_id"
+                                placeholder="VD: M-01"
+                                required
+                                class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 uppercase focus:ring-2 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-dozzie-navy mb-1 block text-sm font-bold"
+                                >Tên Hiển Thị:</label
+                            >
+                            <input
+                                type="text"
+                                name="label"
+                                placeholder="VD: Kén số 1"
+                                required
+                                class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-dozzie-navy mb-1 block text-sm font-bold"
+                                >Khu Vực (Giới tính):</label
+                            >
+                            <select
+                                name="gender"
+                                class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                            >
+                                <option value="Nam">Khu Nam</option>
+                                <option value="Nữ">Khu Nữ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                class="text-dozzie-navy mb-1 block text-sm font-bold"
+                                >Tầng:</label
+                            >
+                            <input
+                                type="number"
+                                name="floor"
+                                placeholder="VD: 3"
+                                required
+                                min="1"
+                                class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            class="text-dozzie-navy mb-1 block text-sm font-bold"
+                            >Trạng Thái Ban Đầu:</label
+                        >
+                        <select
+                            name="status"
+                            class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+                        >
+                            <option value="available">
+                                Sẵn sàng (Available)
+                            </option>
+                            <option value="maintenance">
+                                Bảo trì (Maintenance)
+                            </option>
+                        </select>
+                    </div>
+
+                    <hr class="my-4 border-gray-200" />
+
+                    <h3
+                        class="text-sm font-bold tracking-wider text-gray-500 uppercase"
+                    >
+                        Cấu Hình Thiết Bị IoT
+                    </h3>
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                        <div>
+                            <label
+                                class="text-dozzie-navy mb-1 block text-xs font-bold"
+                                >Device ID:</label
+                            >
+                            <input
+                                type="text"
+                                name="iotConfig.deviceId"
+                                placeholder="esp32_m01"
+                                required
+                                class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-dozzie-navy mb-1 block text-xs font-bold"
+                                >Topic Cửa:</label
+                            >
+                            <input
+                                type="text"
+                                name="iotConfig.topicDoor"
+                                placeholder="room/m01/door"
+                                required
+                                class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                class="text-dozzie-navy mb-1 block text-xs font-bold"
+                                >Topic Điện:</label
+                            >
+                            <input
+                                type="text"
+                                name="iotConfig.topicPower"
+                                placeholder="room/m01/power"
+                                required
+                                class="focus:ring-dozzie-blue w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex gap-4 border-t border-gray-100 pt-4">
+                        <button
+                            type="submit"
+                            class="bg-dozzie-blue hover:bg-opacity-80 flex-1 rounded-lg py-3 font-bold text-white transition-colors"
+                        >
+                            Lưu Phòng Mới
+                        </button>
+                        <button
+                            type="button"
+                            onclick="window.closeModal()"
+                            class="flex-1 rounded-lg bg-gray-200 py-3 font-bold text-gray-700 transition-colors hover:bg-gray-300"
+                        >
+                            Hủy Bỏ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script type="module">
+            import { renderSidebar } from '../js/components/AdminSidebar.js';
+            import '../js/room-manager.js';
+
+            // Lệnh vẽ sidebar ngay lập tức khi load HTML
+            renderSidebar('app-sidebar');
+        </script>
+    </body>
+</html>

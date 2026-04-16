@@ -434,7 +434,7 @@ function setupReviewLogic() {
     btnWrite.addEventListener('click', () => {
         const token = localStorage.getItem('token');
         if (!token) {
-            alert('Vui lòng đăng nhập để viết đánh giá nha đại ca!', () => {
+            alert('Vui lòng đăng nhập để viết đánh giá nha bạn!', () => {
                 window.location.href = '/login.html';
             });
             return;
@@ -492,7 +492,7 @@ function setupReviewLogic() {
                 );
 
                 if (res.ok) {
-                    alert('Cảm ơn đại ca đã đánh giá!', () => {
+                    alert('Cảm ơn bạn đã đánh giá!', () => {
                         closeModal();
                         loadReviews(); // Load lại list ngay lập tức
                     });
