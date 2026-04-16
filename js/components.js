@@ -2,7 +2,7 @@
 
 function renderNavbar() {
     // 1. Kiểm tra Token và bóc tách Role
-    const token = localStorage.getItem('token');
+    let token = localStorage.getItem('token');
     let isAdmin = false;
     let userName = 'Khách'; // Mặc định
 
