@@ -1,5 +1,5 @@
 // js/components/AdminSidebar.js
-
+import '../css/style.css';
 export function renderSidebar(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
