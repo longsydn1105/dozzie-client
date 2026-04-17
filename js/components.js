@@ -1,5 +1,4 @@
 // client/js/components.js
-import '../src/style.css';
 
 function renderNavbar() {
     // 1. Kiểm tra Token và bóc tách Role
