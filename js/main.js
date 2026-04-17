@@ -1,5 +1,7 @@
 // client/js/main.js
 
+import serviceApi from '../src/api/serviceApi';
+
 // 1. HIỆU ỨNG KHI VÀO TRANG (FADE IN)
 window.addEventListener('pageshow', (event) => {
     document.body.classList.add('loaded');
@@ -83,7 +85,7 @@ window.closeDozzieAlert = function () {
     }
 };
 // ... (Phần code cũ document.addEventListener... giữ nguyên bên dưới) ...
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
     // 1. LOGIC CHUYỂN TRANG MƯỢT (FADE OUT)
     // ==========================================
@@ -350,6 +352,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetUrl = `/book-now.html?date=${date}&time=${time}&duration=${duration}&gender=${genderParam}&male=${counts.male}&female=${counts.female}`;
             window.location.href = targetUrl;
         });
+    }
+
+    const selectElement = document.getElementById('quick-duration');
+    selectElement.innerHTML = `<option value="" disabled selected>Đang tải dữ liệu...</option>`;
+
+    try {
+        const response = await serviceApi.getActivePackages();
+        const packages = response.data?.data || [];
+        if (!packages || packages.length === 0) {
+            selectElement.innerHTML = `<option value="" disabled selected>Chưa có gói dịch vụ nào</option>`;
+            return;
+        }
+
+        const optionsHtml = packages
+            .map((pkg) => {
+                const optionValue = pkg.hours; // hoặc pkg._id
+
+                // Format giá tiền cho đẹp (VD: 150000 -> 150.000đ)
+                const formattedPrice = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                }).format(pkg.price);
+
+                return `<option value="${optionValue}">Gói ${pkg.hours} Giờ - ${formattedPrice}</option>`;
+            })
+            .join('');
+
+        // 4. Ốp toàn bộ HTML mới vào thẻ select
+        selectElement.innerHTML = optionsHtml;
+    } catch (error) {
+        console.error('Lỗi khi lấy danh sách gói dịch vụ:', error);
+        selectElement.innerHTML = `<option value="" disabled selected>Lỗi tải dữ liệu. Vui lòng thử lại.</option>`;
     }
 
     loadReviews();
