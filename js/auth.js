@@ -90,7 +90,7 @@ async function handleRegister(event) {
         }
     } catch (error) {
         // 4. XỬ LÝ LỖI (Tất cả lỗi 400, 409, 500... bơi hết vào đây)
-        console.error('Lỗi đăng ký:', err);
+        console.error('Lỗi đăng ký:', error);
 
         // Lấy message lỗi từ Server trả về (ví dụ: "Email đã tồn tại")
         const serverMsg = error.response?.data?.message || 'Lỗi kết nối!';
