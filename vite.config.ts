@@ -20,7 +20,7 @@ export default defineConfig({
                 features: resolve(__dirname, 'features.html'),
                 myBooking: resolve(__dirname, 'my-booking.html'),
                 payment: resolve(__dirname, 'payment.html'),
-
+                controlRoom: resolve(__dirname, 'control-room.html'),
                 // --- KHU VỰC ADMIN (TẤT CẢ FILE TRONG THƯ MỤC ADMIN) ---
                 adminDashboard: resolve(__dirname, 'admin/dashboard.html'),
                 adminBookings: resolve(__dirname, 'admin/bookings.html'),
