@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dozzie Smart Key</title>
+    
+    <!-- Nhúng Tailwind CSS qua CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Cấu hình Tone màu chủ đạo của Dozzie -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dozzie: {
+                            dark: '#1e1e2f',     
+                            card: '#2a2a40',     
+                            primary: '#ff8c00',  
+                            danger: '#ff4d4d',   
+                            success: '#00cc66'   
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dozzie-dark min-h-screen flex items-center justify-center p-4 font-sans text-white">
+
+    <!-- Khung Giao Diện -->
+    <div class="bg-dozzie-card w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-gray-700 relative">
+        
+        <!-- Header -->
+        <div class="bg-dozzie-primary p-6 text-center rounded-b-3xl shadow-lg">
+            <h1 class="text-2xl font-bold tracking-wider">DOZZIE KEY</h1>
+            <p class="text-sm font-medium text-white/80 mt-1">Hệ Thống Điều Khiển IoT</p>
+        </div>
+
+        <div class="px-6 py-8 text-center">
+            <p class="text-gray-400 text-sm uppercase tracking-widest mb-1">Phòng của bạn</p>
+            <h2 class="text-5xl font-extrabold text-white mb-8" id="room-id-display">M-01</h2>
+
+            <!-- Các Nút Điều Khiển (Đã gán ID để JS gọi) -->
+            <div class="space-y-4">
+                <button id="btn-open" 
+                    class="w-full bg-dozzie-success hover:bg-green-600 text-white font-bold py-4 rounded-xl transition duration-300 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,204,102,0.4)] active:scale-95 disabled:opacity-50">
+                    MỞ CỬA PHÒNG
+                </button>
+
+                <button id="btn-close" 
+                    class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-4 rounded-xl transition duration-300 flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50">
+                    ĐÓNG CỬA
+                </button>
+
+                <button id="btn-sos" 
+                    class="w-full mt-6 bg-transparent border-2 border-dozzie-danger text-dozzie-danger hover:bg-dozzie-danger hover:text-white font-bold py-4 rounded-xl transition duration-300 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,77,77,0.2)] active:scale-95 disabled:opacity-50">
+                    BÁO ĐỘNG KHẨN CẤP
+                </button>
+            </div>
+        </div>
+
+        <!-- Thanh Trạng Thái -->
+        <div id="statusBox" class="bg-gray-900 text-xs text-center p-3 text-gray-400 border-t border-gray-700 h-10 flex items-center justify-center">
+            Sẵn sàng kết nối...
+        </div>
+    </div>
+
+    <!-- SCRIPT GỌI API (BẮT BUỘC DÙNG type="module") -->
+    <script type="module">
+        // IMPORT cái file roomApi của ông vào đây. 
+        // LƯU Ý: Phải sửa đường dẫn './src/api/roomApi.js' cho đúng với vị trí file HTML này
+        import roomApi from './src/api/roomApi.js'; 
+
+        const ROOM_ID = 'M-01';
+        
+        // Lấy các DOM elements
+        const statusBox = document.getElementById('statusBox');
+        const btnOpen = document.getElementById('btn-open');
+        const btnClose = document.getElementById('btn-close');
+        const btnSos = document.getElementById('btn-sos');
+        const allButtons = [btnOpen, btnClose, btnSos];
+
+        // Hàm chung xử lý gọi API
+        async function executeCommand(commandType) {
+            // 1. Cập nhật UI lúc đang chờ
+            statusBox.innerHTML = `<span class="text-yellow-400 animate-pulse">Đang gửi lệnh ${commandType}...</span>`;
+            allButtons.forEach(btn => btn.disabled = true); // Khóa nút tránh spam
+
+            // 2. Gói data (DTO) gửi xuống API
+            const payloadData = {
+                topic: `dozzie/capsule/${ROOM_ID}`,
+                payload: {
+                    command: commandType,
+                    key: "DK-DOZZIE-TEST-KEY" 
+                }
+            };
+
+            try {
+                // 3. Gọi thẳng hàm sendIoTCommand từ module của ông
+                const response = await roomApi.sendIoTCommand(payloadData);
+                
+                if (response.data && response.data.success) {
+                    statusBox.innerHTML = `<span class="text-dozzie-success font-bold">🟢 Đã thi hành lệnh ${commandType}!</span>`;
+                }
+            } catch (error) {
+                console.error("Lỗi gửi lệnh:", error);
+                statusBox.innerHTML = `<span class="text-dozzie-danger font-bold">🔴 Lỗi kết nối tới Server!</span>`;
+            } finally {
+                // 4. Mở khóa nút và reset trạng thái sau 3 giây
+                allButtons.forEach(btn => btn.disabled = false);
+                setTimeout(() => {
+                    statusBox.innerHTML = 'Sẵn sàng kết nối...';
+                }, 3000);
+            }
+        }
+
+        // Gắn sự kiện (Event Listeners) cho các nút
+        btnOpen.addEventListener('click', () => executeCommand('DOOR_OPEN'));
+        btnClose.addEventListener('click', () => executeCommand('DOOR_CLOSE'));
+        btnSos.addEventListener('click', () => executeCommand('SOS'));
+
+    </script>
+</body>
+</html>

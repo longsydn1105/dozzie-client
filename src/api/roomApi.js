@@ -7,6 +7,7 @@ const roomApi = {
     getRoomById: (id) => axiosClient.get(`/rooms/${id}`),
     updateRoom: (id, data) => axiosClient.put(`/rooms/${id}`, data),
     deleteRoom: (id) => axiosClient.delete(`/rooms/${id}`),
+    sendIoTCommand: (data) => axiosClient.post('/rooms/iot-command', data)
 };
 
 export default roomApi;
