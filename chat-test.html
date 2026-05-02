@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Test Dozzie Live Chat</title>
+        <!-- Nhúng thư viện Socket.io -->
+        <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+        <style>
+            body {
+                font-family: sans-serif;
+                padding: 20px;
+                max-width: 500px;
+                margin: auto;
+            }
+            #chatBox {
+                border: 1px solid #ccc;
+                height: 300px;
+                overflow-y: scroll;
+                padding: 10px;
+                margin-bottom: 10px;
+                background: #f9f9f9;
+            }
+            .msg {
+                padding: 8px;
+                margin: 5px 0;
+                border-radius: 8px;
+                max-width: 80%;
+            }
+            .customer {
+                background: #d1f4cc;
+                text-align: right;
+                margin-left: auto;
+            }
+            .admin {
+                background: #e2e2e2;
+                text-align: left;
+                margin-right: auto;
+            }
+            input,
+            button {
+                padding: 10px;
+                font-size: 16px;
+                margin-top: 5px;
+            }
+            .controls {
+                display: flex;
+                gap: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Dozzie Chat Test</h2>
+
+        <div>
+            <label>Booking ID (Phòng Chat):</label>
+            <input
+                type="text"
+                id="bookingId"
+                value="69ee8d115adc8375626640ec"
+                style="width: 100%"
+            />
+        </div>
+
+        <div class="controls" style="margin-top: 10px">
+            <select id="role">
+                <option value="customer">Khách Hàng</option>
+                <option value="admin">Lễ Tân (Admin)</option>
+            </select>
+            <button onclick="connectSocket()">1. Bấm để Kết Nối</button>
+        </div>
+
+        <hr />
+
+        <div id="chatBox"></div>
+
+        <div class="controls">
+            <input
+                type="text"
+                id="msgText"
+                placeholder="Nhập tin nhắn..."
+                style="flex: 1"
+                onkeypress="if(event.key === 'Enter') sendMessage()"
+            />
+            <button onclick="sendMessage()">Gửi</button>
+        </div>
+
+        <script>
+            let socket;
+            const chatBox = document.getElementById('chatBox');
+            const API_BASE_URL = 'http://localhost:3000/api';
+
+            function renderMessage(data) {
+                const div = document.createElement('div');
+                div.className = `msg ${data.senderRole || 'customer'}`;
+                div.innerHTML = `<strong>${data.senderRole || 'customer'}:</strong> ${data.text || ''}`;
+                chatBox.appendChild(div);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            async function loadChatHistory(bookingId) {
+                const token = localStorage.getItem('token');
+
+                if (!token) {
+                    alert('Vui lòng đăng nhập trước khi xem lịch sử chat!');
+                    return;
+                }
+
+                const response = await fetch(
+                    `${API_BASE_URL}/chat/history/${bookingId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    },
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        result.message || 'Không tải được lịch sử chat',
+                    );
+                }
+
+                const messages = Array.isArray(result.data) ? result.data : [];
+                messages.forEach((message) => renderMessage(message));
+            }
+
+            // Hàm 1: Kết nối và Xin vào phòng
+            async function connectSocket() {
+                const bookingId = document.getElementById('bookingId').value;
+                const role = document.getElementById('role').value;
+
+                if (socket && socket.connected) {
+                    alert('Đã kết nối rồi, đừng bấm nữa Đại Ca ơi!');
+                    return;
+                }
+                // KẾT NỐI SERVER (Nhớ sửa port nếu cần)
+                socket = io('http://localhost:3000');
+
+                socket.on('connect', () => {
+                    appendLog(`🟢 Đã kết nối Server (ID: ${socket.id})`);
+
+                    // Gửi lệnh báo danh
+                    socket.emit('join_chat', {
+                        bookingId: bookingId,
+                        role: role,
+                    });
+
+                    chatBox.innerHTML = '';
+                    appendLog('📜 Đang tải lịch sử chat...');
+                    loadChatHistory(bookingId)
+                        .then(() => {
+                            appendLog('✅ Đã tải lịch sử chat');
+                        })
+                        .catch((error) => {
+                            console.error('Lỗi load history:', error);
+                            appendLog(
+                                `⚠️ Không tải được lịch sử chat: ${error.message}`,
+                            );
+                        });
+                });
+
+                // LẮNG NGHE TIN NHẮN TỪ SERVER TRẢ VỀ
+                socket.on('receive_message', (data) => {
+                    console.log('Nhận data:', data);
+                    renderMessage(data);
+                });
+
+                socket.on('disconnect', () => {
+                    appendLog(`🔴 Đã ngắt kết nối!`);
+                });
+            }
+
+            // Hàm 2: Gửi tin nhắn
+            function sendMessage() {
+                if (!socket || !socket.connected) {
+                    alert('Vui lòng kết nối trước!');
+                    return;
+                }
+
+                const textInput = document.getElementById('msgText');
+                if (textInput.value.trim() === '') return;
+
+                const payload = {
+                    bookingId: document.getElementById('bookingId').value,
+                    roomId: 'M-01',
+                    senderRole: document.getElementById('role').value,
+                    text: textInput.value,
+                };
+
+                // Bắn sự kiện lên Server
+                socket.emit('send_message', payload);
+
+                textInput.value = ''; // Xóa khung nhập
+            }
+
+            function appendLog(text) {
+                const div = document.createElement('div');
+                div.style =
+                    'color: gray; font-size: 12px; text-align: center; margin: 10px 0;';
+                div.innerText = text;
+                chatBox.appendChild(div);
+            }
+        </script>
+    </body>
+</html>

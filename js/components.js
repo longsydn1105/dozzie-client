@@ -91,6 +91,8 @@ function renderNavbar() {
 
                                 <a href="/control-room.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#229ebd] rounded-lg transition-colors">Điều khiển phòng</a>
 
+                                <a href="/chat-test.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#229ebd] rounded-lg transition-colors">Test Chat</a>
+
                                 <div class="h-px bg-gray-100 my-1"></div>
                                 
                                 <button id="logout-btn" class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2">

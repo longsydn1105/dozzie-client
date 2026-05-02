@@ -21,13 +21,17 @@ export default defineConfig({
                 myBooking: resolve(__dirname, 'my-booking.html'),
                 payment: resolve(__dirname, 'payment.html'),
                 controlRoom: resolve(__dirname, 'control-room.html'),
+                chatTest: resolve(__dirname, 'chat-test.html'),
                 // --- KHU VỰC ADMIN (TẤT CẢ FILE TRONG THƯ MỤC ADMIN) ---
                 adminDashboard: resolve(__dirname, 'admin/dashboard.html'),
                 adminBookings: resolve(__dirname, 'admin/bookings.html'),
                 adminInvoices: resolve(__dirname, 'admin/invoices.html'),
                 adminRoomDetail: resolve(__dirname, 'admin/room-detail.html'),
                 adminRooms: resolve(__dirname, 'admin/rooms.html'),
-                adminServicePackage: resolve(__dirname,'admin/servicepackage.html',),
+                adminServicePackage: resolve(
+                    __dirname,
+                    'admin/servicepackage.html',
+                ),
                 adminUsers: resolve(__dirname, 'admin/users.html'),
             },
         },
