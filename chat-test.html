@@ -87,7 +87,8 @@
         <script>
             let socket;
             const chatBox = document.getElementById('chatBox');
-            const API_BASE_URL = 'http://localhost:3000/api';
+            const API_BASE_URL = '%VITE_API_URL%';
+            const SOCKET_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
             function renderMessage(data) {
                 const div = document.createElement('div');
@@ -137,7 +138,7 @@
                     return;
                 }
                 // KẾT NỐI SERVER (Nhớ sửa port nếu cần)
-                socket = io('http://localhost:3000');
+                socket = io(SOCKET_BASE_URL);
 
                 socket.on('connect', () => {
                     appendLog(`🟢 Đã kết nối Server (ID: ${socket.id})`);
