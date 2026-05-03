@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giao tiếp Khách hàng - Dozzie Admin</title>
+    
+    <script type="module" src="../js/admin-auth-guard.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dozzie: {
+                            blue: '#219EBC',
+                            navy: '#18233B',
+                            success: '#10B981',
+                            danger: '#EF4444',
+                            bg: '#F3F4F6',
+                            gray: '#E5E7EB',
+                            sos: '#FF4D4D'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 4. FontAwesome cho Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-dozzie-bg h-screen flex overflow-hidden font-sans">
+
+    <!-- SIDEBAR CONTAINER (Yêu cầu của Đại Ca) -->
+    <div id="app-sidebar" class="hidden w-64 shrink-0 md:block z-50"></div>
+
+    <!-- MAIN CONTENT (2 Cột: Danh sách Chat & Cửa sổ Chat) -->
+    <div class="flex-1 flex flex-col md:flex-row h-full overflow-hidden">
+        
+        <!-- CỘT TRÁI: DANH SÁCH KHÁCH HÀNG (CHAT LIST) -->
+        <div class="w-full md:w-1/3 lg:w-1/4 bg-white border-r border-dozzie-gray flex flex-col h-full z-10 shadow-sm">
+            <!-- Header Cột Trái -->
+            <div class="p-4 border-b border-dozzie-gray bg-white">
+                <h2 class="text-xl font-bold text-dozzie-navy">Tin nhắn</h2>
+                <div class="mt-3 relative">
+                    <input type="text" placeholder="Tìm tên khách hoặc phòng..." class="w-full pl-10 pr-4 py-2 rounded-lg bg-dozzie-bg border-none focus:ring-2 focus:ring-dozzie-blue outline-none text-sm">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                </div>
+            </div>
+            <!-- Khung cuộn danh sách -->
+            <div id="chat-list-container" class="flex-1 overflow-y-auto">
+                <!-- Data sẽ được JS render vào đây -->
+                <div class="p-6 text-center text-gray-400 text-sm">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2 text-dozzie-blue"></i>
+                    <p>Đang tải danh sách...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CỘT PHẢI: CỬA SỔ CHAT TRỰC TIẾP -->
+        <div class="w-full md:w-2/3 lg:w-3/4 flex flex-col h-full bg-white relative">
+            
+            <!-- Màn hình chờ (Khi chưa chọn ai) -->
+            <div id="empty-chat-state" class="absolute inset-0 flex flex-col items-center justify-center bg-dozzie-bg z-20">
+                <div class="h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-md mb-4 text-dozzie-blue text-4xl">
+                    <i class="far fa-comments"></i>
+                </div>
+                <h3 class="text-xl font-bold text-dozzie-navy">Chưa chọn đoạn chat nào</h3>
+                <p class="text-gray-500 mt-2">Chọn một khách hàng bên trái để bắt đầu hỗ trợ</p>
+            </div>
+
+            <!-- Header Cửa sổ Chat -->
+            <div id="chat-header" class="px-6 py-4 border-b border-dozzie-gray bg-white flex justify-between items-center hidden">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <img id="chat-avatar" src="https://ui-avatars.com/api/?name=Guest&background=10B981&color=fff" class="h-10 w-10 rounded-full border border-gray-200">
+                        <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-dozzie-success border-2 border-white"></span>
+                    </div>
+                    <div>
+                        <h3 id="chat-title" class="font-bold text-dozzie-navy">Phòng M-01 (Khách Hàng)</h3>
+                        <p id="chat-subtitle" class="text-xs text-gray-500">Mã đơn: <span id="chat-booking-id">...</span></p>
+                    </div>
+                </div>
+                <div class="flex space-x-2 text-gray-400">
+                    <button class="p-2 hover:text-dozzie-blue hover:bg-dozzie-bg rounded-full transition"><i class="fas fa-phone"></i></button>
+                    <button class="p-2 hover:text-dozzie-blue hover:bg-dozzie-bg rounded-full transition"><i class="fas fa-ellipsis-v"></i></button>
+                </div>
+            </div>
+
+            <!-- Khung hiển thị nội dung tin nhắn -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-dozzie-bg hidden">
+                <!-- Tin nhắn render ở đây -->
+            </div>
+
+            <!-- Khung nhập tin nhắn -->
+            <div id="chat-input-area" class="p-4 bg-white border-t border-dozzie-gray hidden">
+                <form id="chat-form" class="flex items-end space-x-2">
+                    <button type="button" class="p-3 text-gray-400 hover:text-dozzie-blue transition"><i class="fas fa-paperclip"></i></button>
+                    <div class="flex-1 relative">
+                        <textarea id="message-input" rows="1" class="w-full bg-dozzie-bg border border-dozzie-gray rounded-2xl pl-4 pr-10 py-3 focus:outline-none focus:ring-1 focus:ring-dozzie-blue resize-none shadow-inner" placeholder="Nhập tin nhắn hỗ trợ..."></textarea>
+                    </div>
+                    <button type="submit" class="p-3 bg-dozzie-blue text-white rounded-full hover:bg-blue-600 transition shadow-md h-12 w-12 flex items-center justify-center">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Nhúng logic JS -->
+    <script type="module">
+        import { renderSidebar } from '../js/components/AdminSidebar.js';
+        renderSidebar('app-sidebar');
+    </script>
+    <script type="module" src="../js/admin-message.js"></script>
+
+</body>
+</html>
