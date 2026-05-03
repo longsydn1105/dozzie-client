@@ -33,7 +33,7 @@ export default defineConfig({
                     'admin/servicepackage.html',
                 ),
                 adminUsers: resolve(__dirname, 'admin/users.html'),
-                adminMessage: resolve(__dirname, 'admin/messages.html'),
+                adminMessage: resolve(__dirname, 'admin/message.html'),
             },
         },
     },
