@@ -9,7 +9,7 @@ export function renderSidebar(containerId) {
     // 1. Lấy đường dẫn hiện tại
     const currentPath = window.location.pathname;
 
-    // 2. Định nghĩa menu với các link chuẩn
+    // 2. Định nghĩa menu
     const menuItems = [
         { name: 'Tổng quan', path: 'dashboard.html', icon: '📊' },
         { name: 'Quản lý Phòng', path: 'rooms.html', icon: '🛏️' },
@@ -95,10 +95,8 @@ export function renderSidebar(containerId) {
     });
 
     // ==========================================
-    // 6. LOGIC WEBSOCKET LẮNG NGHE TOÀN CẦU
+    // 6. LOGIC CHAT (KHÔNG Ở TRANG MESSAGE)
     // ==========================================
-    // Chỉ bật socket lắng nghe nếu ông KHÔNG ở trang message.html
-    // (Vì ở trang message.html ông sẽ có file js riêng để xử lý chat chi tiết rồi)
     if (!currentPath.includes('message.html')) {
         if (typeof io !== 'undefined') {
             const socket = io('https://dozzie-server.onrender.com');
@@ -108,26 +106,77 @@ export function renderSidebar(containerId) {
             });
 
             socket.on('admin_global_notification', (newMessage) => {
-                console.log('CÓ TIN NHẮN TỚI TỪ KHÁCH:', newMessage);
-
                 localStorage.setItem('hasUnreadMsg', 'true');
-
                 const badge = document.getElementById('chat-badge');
-                if (badge) {
-                    badge.classList.remove('hidden');
-                }
+                if (badge) badge.classList.remove('hidden');
 
                 notifyAudio.currentTime = 0;
-                notifyAudio.play().catch((e) => {
-                    console.error('Lỗi phát âm thanh:', e);
-                });
+                notifyAudio
+                    .play()
+                    .catch((e) => console.error('Lỗi phát âm thanh:', e));
             });
 
             socket.on('connect_error', (err) => {
                 console.error('Socket kết nối lỗi:', err.message);
             });
-        } else {
-            console.warn('⚠️ Chưa nhúng thư viện Socket.io vào thẻ HTML!');
         }
+    }
+
+    // ==========================================
+    // 7. LOGIC SOS (HOẠT ĐỘNG Ở TẤT CẢ MỌI TRANG)
+    // ==========================================
+    if (typeof io !== 'undefined') {
+        const sosSocket = io('https://dozzie-server.onrender.com'); 
+        const sirenAudio = new Audio('../assets/audio/siren-alarm.mp3'); 
+        sirenAudio.loop = true;
+
+        sosSocket.on('ADMIN_SOS_ALERT', (sosData) => {
+            console.log('🚨 BÁO ĐỘNG SOS PHÒNG:', sosData.roomId);
+
+            sirenAudio
+                .play()
+                .catch((e) => console.error('Lỗi phát còi SOS:', e));
+
+            // Tránh duplicate popup nếu nhận nhiều sự kiện cùng lúc
+            if (document.getElementById(`sos-modal-${sosData.sosId}`)) return;
+
+            // Dựng Modal đỏ chớp nháy
+            const modalHTML = `
+                <div id="sos-modal-${sosData.sosId}" class="fixed inset-0 z-[9999] flex items-center justify-center bg-red-900/90 backdrop-blur-sm">
+                    <div class="bg-white rounded-2xl p-8 max-w-lg w-full text-center shadow-[0_0_50px_rgba(255,0,0,0.8)] animate-pulse">
+                        <div class="text-red-600 text-6xl mb-4">🚨</div>
+                        <h1 class="text-4xl font-extrabold text-red-600 uppercase tracking-wider mb-2">Báo Động SOS!</h1>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">PHÒNG: ${sosData.roomId}</h2>
+                        <p class="text-lg text-gray-600 mb-8 font-medium">Khách hàng cần hỗ trợ gấp: ${sosData.message || ''}</p>
+                        
+                        <button id="btn-ack-${sosData.sosId}" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-xl py-4 rounded-xl shadow-lg transition transform hover:scale-105">
+                            TÔI ĐÃ NHẬN TIN - ĐI CỨU HỘ
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Nút xác nhận tắt báo động
+            document
+                .getElementById(`btn-ack-${sosData.sosId}`)
+                .addEventListener('click', () => {
+                    sirenAudio.pause();
+                    sirenAudio.currentTime = 0;
+                    document
+                        .getElementById(`sos-modal-${sosData.sosId}`)
+                        .remove();
+
+                    // Gọi API xác nhận đã xử lý SOS
+                    const token = localStorage.getItem('token') || '';
+                    fetch(
+                        `https://dozzie-server.onrender.com/api/sos/resolve/${sosData.sosId}`,
+                        {
+                            method: 'PATCH',
+                            headers: { Authorization: `Bearer ${token}` },
+                        },
+                    ).catch((err) => console.error('Lỗi khi tắt SOS:', err));
+                });
+        });
     }
 }
